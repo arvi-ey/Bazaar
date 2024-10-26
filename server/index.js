@@ -1,12 +1,20 @@
-let dotenv = require('dotenv').config()
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const { DatabaseConnection } = require('./Database')
 const AuthRouter = require("./Router/authRouter")
+const bodyParser = require('body-parser')
+var cookieParser = require('cookie-parser')
+var cors = require('cors')
 
 //Application lavel Middlewares
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser())
+
 
 //Db connection Function
 DatabaseConnection(process.env.DB_URL)
