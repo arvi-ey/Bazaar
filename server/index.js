@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const { DatabaseConnection } = require('./Database')
 const AuthRouter = require("./Router/authRouter")
+const ProductRouter = require("./Router/productRouter")
 const bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
 var cors = require('cors')
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 
 
 app.use('/auth', AuthRouter)
+app.use('/products', ProductRouter)
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
