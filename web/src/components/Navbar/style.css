@@ -1,0 +1,24 @@
+.NavStyle {
+    cursor: pointer;
+}
+
+.Sign-up {
+    height: 50px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    font-weight: 600;
+}
+
+.Sign-In {
+    height: 50px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    border: 3px solid;
+    font-weight: 600;
+}
