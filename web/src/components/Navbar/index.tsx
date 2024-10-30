@@ -16,7 +16,7 @@ function Navbar() {
                 </div>
             </div>
             <div className='NavStyle' onClick={() => Navigatepage('/signup')} >
-                <div className={'Sign-up bg-MAIN_COLOR hover:bg-white hover:border-2 hover:border-MAIN_COLOR transition duration-500'} >
+                <div className={'Sign-up bg-MAIN_COLOR  hover:bg-SECONDARY_COLOR transition duration-500'} >
                     Sign up
                 </div>
             </div>

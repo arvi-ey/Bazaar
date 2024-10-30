@@ -2,6 +2,10 @@ import BgLogo from "/Signup.jpg"
 import TextField from '@mui/material/TextField';
 import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { signupUser } from "../../../../Redux/Slice/authSlicer"
+import { RootState, AppDispatch } from "../../../../Redux/Store/index"
+
 function Signup() {
     const [data, setData] = useState({
         name: '',
@@ -12,6 +16,9 @@ function Signup() {
     });
 
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+    const { user } = useSelector((state: RootState) => state.auth)
+
     const backgroundStyle = {
         backgroundImage: `url(${BgLogo})`,
     };
@@ -43,6 +50,11 @@ function Signup() {
             alert('Confirm password is required!')
             return
         }
+        if (password !== confirm_password) {
+            alert('Passwords do not match!')
+            return
+        }
+        await dispatch(signupUser({ name, email, phone_number, password }))
     }
 
     return (
@@ -75,7 +87,7 @@ function Signup() {
                         onChange={OnTextChange}
                     />
                     <TextField
-                        id="confirm _password"
+                        id="confirm_password"
                         label="Confirm Password"
                         variant="outlined"
                         onChange={OnTextChange}
@@ -83,14 +95,14 @@ function Signup() {
                     <button
                         onClick={OnSignup}
                         type="submit"
-                        className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-200"
+                        className="w-full bg-MAIN_COLOR hover:bg-SECONDARY_COLOR text-black p-2 font-semibold text-xl rounded-md transition duration-200"
                     >
                         Sign Up
                     </button>
                 </form>
-                <p className="mt-4 flex gap-2 justify-center text-center text-sm text-gray-600">
+                <p className="mt-4 flex gap-2 justify-center items-center text-center text-sm text-gray-600">
                     Already have an account?{' '}
-                    <span className="text-blue-500 hover:underline cursor-pointer" onClick={() => navigate('/signin')}>
+                    <span className="bg-black text-white p-2 px-6 font-medium rounded-xl hover:bg-slate-900 cursor-pointer" onClick={() => navigate('/signin')}>
                         Log in
                     </span>
                 </p>
