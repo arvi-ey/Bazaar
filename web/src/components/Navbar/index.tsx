@@ -25,6 +25,11 @@ function Navbar() {
                         Sign up
                     </div>
                 </div>
+                <div className='NavStyle' onClick={() => Navigatepage('/dashboard')} >
+                    <div className={'Sign-up bg-MAIN_COLOR  hover:bg-SECONDARY_COLOR transition duration-500'} >
+                        Dash Board
+                    </div>
+                </div>
             </div>
         </div>
     )
