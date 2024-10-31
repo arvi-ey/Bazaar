@@ -39,9 +39,8 @@ function Signin() {
             return
         }
         await dispatch(signinUser(data))
-        console.log("user logged in successfully")
+        navigate("/dashboard")
     }
-    // console.log("This is in login page", user)
 
 
     return (

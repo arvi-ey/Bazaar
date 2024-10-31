@@ -8,8 +8,10 @@ import {
 import App from './App.tsx'
 import Signin from './components/Signin';
 import Signup from './components/Signup';
-import { store } from "../../Redux/store";
+import { store } from "../../Redux/Store";
 import { Provider } from 'react-redux'
+import ProtectedRoute from './components/ProtectedRoute';
+import Dashboard from './components/Dashboard';
 
 
 const router = createBrowserRouter([
@@ -24,6 +26,15 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: '/dashboard',
+        element: <Dashboard />,
+      },
+    ],
   },
 ]);
 

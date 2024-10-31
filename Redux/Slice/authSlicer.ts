@@ -19,10 +19,11 @@ export const signupUser = createAsyncThunk(
     async (userData: authState) => {
         try {
             const response = await axios.post(URL + `auth/signup`, userData);
-            if (response.data.data) {
+            if (response.data.user === true && response.data.data !== null) {
                 return response.data.data;
             }
         } catch (error: any) {
+            console.log("this part is running")
             return error
         }
     }
@@ -42,6 +43,8 @@ export const signinUser = createAsyncThunk(
         }
     }
 );
+
+
 
 export const authSlice = createSlice({
     name: 'auth',
