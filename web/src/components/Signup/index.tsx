@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signupUser } from "../../../../Redux/Slice/authSlicer"
 import { RootState, AppDispatch } from "../../../../Redux/Store/index"
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 function Signup() {
     const [data, setData] = useState({
@@ -17,7 +19,7 @@ function Signup() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const { user } = useSelector((state: RootState) => state.auth)
+    const { user, loading, error } = useSelector((state: RootState) => state.auth)
 
     const backgroundStyle = {
         backgroundImage: `url(${BgLogo})`,
@@ -55,8 +57,8 @@ function Signup() {
             return
         }
         await dispatch(signupUser({ name, email, phone_number, password }))
+        navigate('/signin')
     }
-
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100" style={backgroundStyle}>
             <div className="bg-white p-8 rounded-lg shadow-md w-1/3">
@@ -92,13 +94,18 @@ function Signup() {
                         variant="outlined"
                         onChange={OnTextChange}
                     />
-                    <button
-                        onClick={OnSignup}
-                        type="submit"
-                        className="w-full bg-MAIN_COLOR hover:bg-SECONDARY_COLOR text-black p-2 font-semibold text-xl rounded-md transition duration-200"
-                    >
-                        Sign Up
-                    </button>
+                    {loading ?
+                        <div className={`w-full flex items-center justify-center `} >
+                            <CircularProgress size={24} style={{ color: "black" }} />
+                        </div> :
+                        <button
+                            onClick={OnSignup}
+                            type="submit"
+                            className={`w-full bg-MAIN_COLOR hover:bg-SECONDARY_COLOR text-black p-2 font-semibold text-xl rounded-md transition duration-200`}>
+                            Sign Up
+                        </button>
+                    }
+                    {error ? <p>{error}</p> : null}
                 </form>
                 <p className="mt-4 flex gap-2 justify-center items-center text-center text-sm text-gray-600">
                     Already have an account?{' '}

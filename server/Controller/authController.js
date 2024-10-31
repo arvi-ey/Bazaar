@@ -10,7 +10,8 @@ exports.UserSignIn = async (req, res) => {
             const user = await UserModel.findOne({ email })
             if (!user) res.status(404).json({
                 message: "This email doesnot exists, please sign up first",
-                user: false,
+                user: null,
+                authenticate: false
             })
             else {
                 const checkPassword = await bcrypt.compare(password, user.password)
@@ -19,7 +20,8 @@ exports.UserSignIn = async (req, res) => {
                     const sessionData = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
                     res.status(200).json({
                         message: "User loggedin succcesfully",
-                        user: true,
+                        user: user,
+                        authenticate: true,
                         session: sessionData
                     })
                 }
