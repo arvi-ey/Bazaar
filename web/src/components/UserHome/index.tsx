@@ -1,6 +1,9 @@
 import React from 'react';
 import { Home, Person, Notifications, Settings, ExitToApp } from '@mui/icons-material';
 import { Avatar } from '@mui/material';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../../../../Redux/Store/index"
+import { UserData } from '../../../../Redux/Slice/userSlicer';
 
 // Define the props for NavItem
 interface NavItemProps {
@@ -20,6 +23,10 @@ interface NotificationItemProps {
 }
 
 const UserHome: React.FC = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const { user, error, loading } = useSelector((state: RootState) => state.user)
+
+
     return (
         <div className="min-h-screen bg-gray-100 flex">
             {/* Sidebar */}

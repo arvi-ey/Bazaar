@@ -24,6 +24,8 @@ import ProductionQuantityLimitsOutlinedIcon from '@mui/icons-material/Production
 import CategoryIcon from '@mui/icons-material/Category';
 import User from "../User/index"
 import Analysis from "../Analytics/index";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../../../../Redux/Store/index"
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -112,7 +114,12 @@ export default function index() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [component, setComponent] = useState("Analytics")
+    const dispatch = useDispatch<AppDispatch>();
+    const { user, error, loading } = useSelector((state: RootState) => state.user)
 
+    React.useEffect(() => {
+        console.log(user)
+    }, [user])
     const handleDrawerOpen = () => {
         setOpen(true);
     };

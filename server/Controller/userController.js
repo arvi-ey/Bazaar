@@ -17,6 +17,23 @@ exports.AddUser = async (req, res) => {
     }
 }
 
+
+exports.GetUser = async (req, res) => {
+    const { id } = req.params
+    if (!id) res.status(404).jsoon({ message: "Missing data" })
+    try {
+        const user = await UserModel.findById(id)
+        res.status(200).json({
+            message: "User fetched successfully",
+            data: user
+        })
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+
+}
+
 exports.UpdateUser = async (req, res) => {
     const { id } = req.params
     if (!id) res.status(404).jsoon({ message: "Missing data" })
