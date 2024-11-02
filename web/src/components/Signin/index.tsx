@@ -16,7 +16,7 @@ function Signin() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const { user, loading } = useSelector((state: RootState) => state.auth)
+    const { user, error, loading } = useSelector((state: RootState) => state.auth)
     const backgroundStyle = {
         backgroundImage: `url(${BgLogo})`,
         backgroundSize: 'cover',
@@ -38,8 +38,20 @@ function Signin() {
             alert('Password is required!')
             return
         }
-        await dispatch(signinUser(data))
-        navigate("/dashboard")
+        try {
+            const userData = await dispatch(signinUser(data)).unwrap()
+            if (userData) {
+                if (userData.userType === 'admin') navigate('/dashboard')
+                if (userData.userType === 'user') navigate('/home')
+
+            }
+            else {
+                alert("Failed to login")
+            }
+        }
+        catch (error) {
+            console.error('Failed to sign in!')
+        }
     }
 
 

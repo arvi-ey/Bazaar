@@ -56,9 +56,15 @@ function Signup() {
             alert('Passwords do not match!')
             return
         }
-        await dispatch(signupUser({ name, email, phone_number, password }))
-        navigate('/signin')
+        const userData = await dispatch(signupUser({ name, email, phone_number, password })).unwrap()
+        if (userData) {
+            navigate('/signin')
+        }
+        else {
+            alert("failed to Sign up")
+        }
     }
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100" style={backgroundStyle}>
             <div className="bg-white p-8 rounded-lg shadow-md w-1/3">

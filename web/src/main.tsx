@@ -6,12 +6,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import App from './App.tsx'
-import Signin from './components/Signin';
+import Signin from './components/Signin/index.tsx';
 import Signup from './components/Signup';
 import { store } from "../../Redux/Store";
 import { Provider } from 'react-redux'
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './components/Dashboard';
+import UserHome from './components/UserHome/'
+import Unauthorized from './components/Unauthorized/index.tsx';
 
 
 const router = createBrowserRouter([
@@ -28,7 +30,7 @@ const router = createBrowserRouter([
     element: <Signup />
   },
   {
-    element: <ProtectedRoute />,
+    element: <ProtectedRoute role="admin" />,
     children: [
       {
         path: '/dashboard',
@@ -36,6 +38,19 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    element: <ProtectedRoute role="user" />,
+    children: [
+      {
+        path: '/home',
+        element: <UserHome />,
+      },
+    ],
+  },
+  {
+    path: "/unauthorized",
+    element: <Unauthorized />
+  }
 ]);
 
 

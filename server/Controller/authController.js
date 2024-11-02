@@ -4,20 +4,26 @@ var bcrypt = require('bcryptjs');
 
 exports.UserSignIn = async (req, res) => {
     const { email, password } = req.body
-    if (!email || !password) res.status(404).json({ message: "Missing Data" })
+    if (!email || !password) return res.status(404).json({ message: "Missing Data" })
     else {
         try {
             const user = await UserModel.findOne({ email })
-            if (!user) res.status(404).json({
+            if (!user) return res.status(404).json({
                 message: "This email doesnot exists, please sign up first",
                 user: null,
                 authenticate: false
             })
             else {
                 const checkPassword = await bcrypt.compare(password, user.password)
-                if (checkPassword === false) res.status(401).json({ message: "Wrong Password", user: false })
+                if (checkPassword === false) return res.status(401).json({ message: "Wrong Password", user: false })
                 else {
-                    const sessionData = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+                    const sessionData = jwt.sign({ id: user._id, role: user.userType }, process.env.JWT_SECRET,);
+                    res.cookie('token', sessionData, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV !== 'development',
+                        sameSite: 'None',
+                        maxAge: 60 * 24 * 60 * 60 * 1000
+                    });
                     res.status(200).json({
                         message: "User loggedin succcesfully",
                         user: user,
@@ -28,7 +34,7 @@ exports.UserSignIn = async (req, res) => {
             }
         }
         catch (error) {
-            res.status(500).json({
+            return res.status(500).json({
                 message: error
             })
         }

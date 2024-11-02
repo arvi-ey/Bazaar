@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { URL } from "../../config"
 import axios from 'axios';
@@ -23,8 +23,7 @@ export const signupUser = createAsyncThunk(
                 return response.data.data;
             }
         } catch (error: any) {
-            console.log("this part is running")
-            return error
+            return isRejectedWithValue(error.response?.data?.message || "Sign up failed");
         }
     }
 );
@@ -33,13 +32,14 @@ export const signinUser = createAsyncThunk(
     'auth/signinUser',
     async (userData: SignInState) => {
         try {
-            const response = await axios.post(URL + `auth/signin`, userData);
+            const response = await axios.post(URL + `auth/signin`, userData, { withCredentials: true });
             if (response.data.authenticate === true && response.data.user && response.data.session) {
-                localStorage.setItem('token', response.data.session)
                 return response.data.user;
             }
+            return isRejectedWithValue("Sign in failed");
         } catch (error: any) {
-            return error
+            // console.log(error)
+            return isRejectedWithValue(error.response?.data?.message || "Sign in failed");
         }
     }
 );
