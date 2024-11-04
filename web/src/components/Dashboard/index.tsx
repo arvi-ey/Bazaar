@@ -24,8 +24,13 @@ import ProductionQuantityLimitsOutlinedIcon from '@mui/icons-material/Production
 import CategoryIcon from '@mui/icons-material/Category';
 import User from "../User/index"
 import Analysis from "../Analytics/index";
+import Settings from "../Settings/index";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../../../Redux/Store/index"
+import SettingsIcon from '@mui/icons-material/Settings';
+import UserImage from "../../assets/demo_user.jpg"
+import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
+import Banner from "../Banner/index"
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -117,12 +122,14 @@ export default function index() {
     const dispatch = useDispatch<AppDispatch>();
     const { user, error, loading } = useSelector((state: RootState) => state.user)
 
-    React.useEffect(() => {
-        console.log(user)
-    }, [user])
+
+
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
+
+    console.log(user)
 
     const handleDrawerClose = () => {
         setOpen(false);
@@ -132,28 +139,31 @@ export default function index() {
         {
             icon: <BarChartIcon />,
             text: 'Analytics',
-            Component: <Analysis />,
         },
         {
             icon: <PersonOutlineOutlinedIcon />,
             text: 'Users',
-            Component: <User />,
         },
         {
             icon: <Inventory2OutlinedIcon />,
             text: 'Product',
-            Component: '/dashboard/user',
         },
         {
             icon: <ProductionQuantityLimitsOutlinedIcon />,
             text: 'Order',
-            Component: '/dashboard/user',
+        },
+        {
+            icon: <ViewCarouselIcon />,
+            text: 'Banner',
         },
         {
             icon: <CategoryIcon />,
             text: 'Category',
-            Component: '/dashboard/user',
-        }
+        },
+        {
+            icon: <SettingsIcon />,
+            text: 'Settings',
+        },
 
     ]
 
@@ -190,58 +200,77 @@ export default function index() {
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
-                <List>
-                    {ListData.map((data, index) => (
-                        <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-                            <ListItemButton
-                                sx={[
-                                    {
-                                        minHeight: 48,
-                                        px: 2.5,
-                                    },
-                                    open
-                                        ? {
-                                            justifyContent: 'initial',
-                                        }
-                                        : {
-                                            justifyContent: 'center',
-                                        },
-                                ]}
-                                onClick={() => setComponent(data.text)}
-                            >
-                                <ListItemIcon
+                <div className='flex flex-col h-full justify-between' >
+                    <List>
+                        {ListData.map((data, index) => (
+                            <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+                                <ListItemButton
                                     sx={[
                                         {
-                                            minWidth: 0,
-                                            justifyContent: 'center',
+                                            minHeight: 48,
+                                            px: 2.5,
                                         },
                                         open
                                             ? {
-                                                mr: 3,
+                                                justifyContent: 'initial',
                                             }
                                             : {
-                                                mr: 'auto',
+                                                justifyContent: 'center',
                                             },
                                     ]}
+                                    onClick={() => setComponent(data.text)}
                                 >
-                                    {data.icon}
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={data.text}
-                                    sx={[
-                                        open
-                                            ? {
-                                                opacity: 1,
-                                            }
-                                            : {
-                                                opacity: 0,
+                                    <ListItemIcon
+                                        sx={[
+                                            {
+                                                minWidth: 0,
+                                                justifyContent: 'center',
                                             },
-                                    ]}
-                                />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
+                                            open
+                                                ? {
+                                                    mr: 3,
+                                                }
+                                                : {
+                                                    mr: 'auto',
+                                                },
+                                        ]}
+                                    >
+                                        {data.icon}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        className="text-TEXT_COLOR"
+                                        primary={data.text}
+                                        sx={[
+                                            open
+                                                ? {
+                                                    opacity: 1,
+                                                }
+                                                : {
+                                                    opacity: 0,
+                                                },
+                                        ]}
+                                    />
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </List>
+                    <div className={`mb-20 flex gap-2 ml-1 items-center cursor-pointer hover:bg-slate-100`} >
+                        <img src={user?.profile_picture ? user.profile_picture : UserImage} alt="user_image" width="60px" height="60" style={{ width: "50px", height: "50px", borderRadius: "50%" }} />
+                        {open &&
+                            <>
+                                <div>
+                                    <p className='text-sm  text-TEXT_COLOR' >{user?.name}</p>
+                                    <p className='text-sm  text-TEXT_COLOR' >{user?.email}</p>
+                                </div>
+                                <div className='gap-1 flex flex-col'>
+                                    <div className='h-1 w-1 rounded-full bg-TEXT_COLOR' ></div>
+                                    <div className='h-1 w-1 rounded-full bg-TEXT_COLOR' ></div>
+                                    <div className='h-1 w-1 rounded-full bg-TEXT_COLOR' ></div>
+                                </div>
+                            </>
+                        }
+                    </div>
+                </div>
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}  >
                 <DrawerHeader />
@@ -251,8 +280,10 @@ export default function index() {
                     || component === "Product" && <h1>Product</h1>
                     || component === "Order" && <h1>Order</h1>
                     || component === "Category" && <h1>Category</h1>
+                    || component === "Setting" && <Settings />
+                    || component === "Banner" && <Banner />
                 }
             </Box>
-        </Box>
+        </Box >
     );
 }

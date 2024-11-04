@@ -24,7 +24,6 @@ interface NotificationItemProps {
 
 const UserHome: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { user, error, loading } = useSelector((state: RootState) => state.user)
 
 
     return (
