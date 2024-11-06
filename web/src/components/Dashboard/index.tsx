@@ -129,8 +129,6 @@ export default function index() {
         setOpen(true);
     };
 
-    console.log(user)
-
     const handleDrawerClose = () => {
         setOpen(false);
     };

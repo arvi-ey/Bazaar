@@ -1,29 +1,14 @@
 import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/toolkit'
 import { URL } from "../../config"
 import axios from 'axios';
+import { UserData } from './userSlicer';
 
-
-
-export interface UserData {
-    name: string,
-    email: string,
-    phone_number: string,
-    password: string,
-    address?: [],
-    userType: string,
-    profile_picture?: string,
-    cart?: [],
-    orders?: [],
-    _id: string
-}
-
-
-export const GetUserInfo = createAsyncThunk(
-    'user/getUser',
-    async (userId: string) => {
+export const GetUsers = createAsyncThunk(
+    'users/getUsers',
+    async () => {
 
         try {
-            const response = await axios.get(URL + `user/getUser/${userId}`, { withCredentials: true });
+            const response = await axios.get(URL + `user/getallUser`, { withCredentials: true });
             return response.data.data;
         }
         catch (error: any) {
@@ -34,10 +19,8 @@ export const GetUserInfo = createAsyncThunk(
 )
 
 
-
-
 export const userSlice = createSlice({
-    name: "user",
+    name: "users",
     initialState: {
         loading: false,
         user: null as UserData | null,
@@ -47,21 +30,22 @@ export const userSlice = createSlice({
 
     },
 
+
     extraReducers: (builder) => {
         builder
-            .addCase(GetUserInfo.pending, (state) => {
+            .addCase(GetUsers.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(GetUserInfo.fulfilled, (state, action) => {
+            .addCase(GetUsers.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload as any;
             })
-            .addCase(GetUserInfo.rejected, (state, action) => {
+            .addCase(GetUsers.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as any;
             })
     }
 })
 
-export const userReducer = userSlice.reducer;
+export const usersReducer = userSlice.reducer;

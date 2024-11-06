@@ -46,8 +46,11 @@ exports.UpdateProduct = async (req, res) => {
 
 
 exports.GetAllProduct = async (req, res) => {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
     try {
-        const Product = await ProductModel.find()
+        const Product = await ProductModel.find().skip(skip).limit(limit)
         res.status(200).json({
             message: "Fetch all product successfull",
             status: "successfull",
@@ -82,10 +85,13 @@ exports.GetSingleProduct = async (req, res) => {
 
 exports.GetAllProductByCategory = async (req, res) => {
     const { category } = req.params
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
     console.log(category)
     if (!category) res.status(404).json({ message: "Missing product category" })
     try {
-        const Product = await ProductModel.find({ category: category })
+        const Product = await ProductModel.find({ category: category }).skip(skip).limit(limit)
         res.status(200).json({
             message: "Fetch product by category successfull",
             status: "successfull",
