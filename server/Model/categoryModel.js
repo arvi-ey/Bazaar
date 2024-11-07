@@ -5,7 +5,7 @@ const categorySchema = mongoose.Schema({
         type: String,
         required: true
     },
-    bannerImage: {
+    categoryImage: {
         type: String,
         required: true
     }

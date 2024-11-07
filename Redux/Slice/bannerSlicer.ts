@@ -25,7 +25,7 @@ export const GetBanners = createAsyncThunk(
             return response.data.data;
         }
         catch (error: any) {
-            return isRejectedWithValue(error.response?.data?.message || "Get user Failed");
+            return isRejectedWithValue(error.response?.data?.message || "Get banner Failed");
         }
     }
 )
@@ -38,7 +38,7 @@ export const AddBanner = createAsyncThunk(
             return response.data.data;
         }
         catch (error: any) {
-            return isRejectedWithValue(error.response?.data?.message || "Get user Failed");
+            return isRejectedWithValue(error.response?.data?.message || "Failed to add Banner");
         }
     }
 )
@@ -51,7 +51,7 @@ export const UpdateBanner = createAsyncThunk(
             return response.data.data;
         }
         catch (error: any) {
-            return isRejectedWithValue(error.response?.data?.message || "Get user Failed");
+            return isRejectedWithValue(error.response?.data?.message || "Failed to Update Banner");
         }
     }
 )

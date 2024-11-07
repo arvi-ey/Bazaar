@@ -20,41 +20,41 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddBanner, GetBanners, UpdateBanner } from '../../../../Redux/Slice/bannerSlicer';
 import { RootState } from '../../../../Redux/Store';
 import { useEffect } from 'react';
-import { Banner } from '../../../../Redux/Slice/bannerSlicer';
 import { AppDispatch } from '../../../../Redux/Store';
+import { AddCategory, GetAllCategory, UpdateCategory, Category } from '../../../../Redux/Slice/categorySlicer';
+// import { Category } from '../../../../Redux/Slice/categorySlicer';
 
 export default function BannerTable() {
     const dispatch = useDispatch<AppDispatch>();
-    const [rows, setRows] = React.useState<Banner[]>([]);
+    const [rows, setRows] = React.useState<Category[]>([]);
     const [open, setOpen] = React.useState(false);
     const [isEditMode, setIsEditMode] = React.useState(false);
     const [currentRow, setCurrentRow] = React.useState({
-        title: '',
-        image: '',
+        categoryImage: '',
+        categoryName: '',
         _id: ""
     });
     const [searchText, setSearchText] = React.useState<string>('');
     const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const { banner, error, loading } = useSelector((state: RootState) => state.banner)
+    const { category, error, loading } = useSelector((state: RootState) => state.category)
 
     useEffect(() => {
-        dispatch(GetBanners());
+        dispatch(GetAllCategory());
     }, [dispatch]);
 
     useEffect(() => {
-        setRows(banner)
-    }, [banner])
+        setRows(category)
+    }, [category])
 
     // console.log(banner)
 
 
     const handleOpenAddDialog = () => {
-        setCurrentRow({ title: '', image: '', _id: " " });
+        setCurrentRow({ categoryImage: '', categoryName: '', _id: " " });
         setIsEditMode(false);
         setOpen(true);
     };
@@ -72,27 +72,27 @@ export default function BannerTable() {
 
     const handleSave = async () => {
         if (isEditMode && editingIndex !== null) {
-            const { image, title, _id } = currentRow;
-            await dispatch(UpdateBanner({
+            const { categoryImage, categoryName, _id } = currentRow;
+            await dispatch(UpdateCategory({
                 data: {
-                    image,
-                    title,
+                    categoryImage,
+                    categoryName,
                     _id,
                 },
                 id: _id
             }));
         } else {
-            const { title, image } = currentRow;
-            await dispatch(AddBanner({
-                image,
-                title,
+            const { categoryImage, categoryName, } = currentRow
+            await dispatch(AddCategory({
+                categoryImage,
+                categoryName
             }));
         }
         handleClose();
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, id } = e.target;
+        const { name, value, } = e.target;
         // console.log(e.target)
         setCurrentRow((prev) => ({ ...prev, [name]: value }));
     };
@@ -115,7 +115,7 @@ export default function BannerTable() {
             <TableContainer component={Paper}>
                 <div className='flex items-center  mb-5'>
                     <div className="w-[90%] font-extrabold text-xl ml-3">
-                        Banners
+                        Categories
                     </div>
 
                     <div className="flex justify-end  items-center">
@@ -136,8 +136,8 @@ export default function BannerTable() {
                 <Table sx={{ minWidth: 650 }} aria-label="banner table">
                     <TableHead className='bg-slate-300'>
                         <TableRow>
-                            <TableCell style={{ fontWeight: "bolder" }}>Banner Title</TableCell>
-                            <TableCell align="center" style={{ fontWeight: "bolder" }}>Image</TableCell>
+                            <TableCell style={{ fontWeight: "bolder" }}>Category Name</TableCell>
+                            <TableCell align="center" style={{ fontWeight: "bolder" }}>Category Image</TableCell>
                             <TableCell align="right" style={{ fontWeight: "bolder" }}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
@@ -145,13 +145,13 @@ export default function BannerTable() {
                         {rows
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => (
-                                <TableRow key={`${row.title}-${index}`}>
-                                    <TableCell component="th" scope="row" style={{ fontWeight: "bold" }}>
-                                        {row.title}
+                                <TableRow key={`${row.categoryName}-${index}`}>
+                                    <TableCell component="th" scope="row" style={{ fontWeight: "bold" }} >
+                                        {row.categoryName}
                                     </TableCell>
                                     <TableCell align="center">
                                         <div className="flex justify-center">
-                                            <img src={row.image} height={100} width={100} alt={row.title} className="rounded-md" />
+                                            <img src={row.categoryImage} height={100} width={100} alt={row.categoryName} className="rounded-md" />
                                         </div>
                                     </TableCell>
                                     <TableCell align="right">
@@ -180,20 +180,20 @@ export default function BannerTable() {
                 <DialogContent>
                     <TextField
                         margin="dense"
-                        name="title"
-                        label="Banner Title"
+                        name="categoryName"
+                        label="Category Name"
                         type="text"
                         fullWidth
-                        value={currentRow.title}
+                        value={currentRow.categoryName}
                         onChange={handleChange}
                     />
                     <TextField
                         margin="dense"
-                        name="image"
-                        label="Image URL"
+                        name="categoryImage"
+                        label="Category Image"
                         type="text"
                         fullWidth
-                        value={currentRow.image}
+                        value={currentRow.categoryImage}
                         onChange={handleChange}
                     />
                 </DialogContent>

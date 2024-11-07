@@ -1,8 +1,8 @@
 const categoryModel = require('../Model/categoryModel')
 
 exports.AddCategory = async (req, res) => {
-    const { categoryName, bannerImage } = req.body
-    if (!categoryName || !bannerImage) res.status(404).json({
+    const { categoryName, categoryImage } = req.body
+    if (!categoryName || !categoryImage) res.status(404).json({
         message: "Missing data"
     })
     else {
