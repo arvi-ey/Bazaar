@@ -110,6 +110,8 @@ export default function BannerTable() {
         setSearchText(event.target.value)
     }
 
+    const FilteredData = rows.filter(row => row.title.toLowerCase().includes(searchText));
+
     return (
         <>
             <TableContainer component={Paper}>
@@ -142,7 +144,7 @@ export default function BannerTable() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows
+                        {FilteredData
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => (
                                 <TableRow key={`${row.title}-${index}`}>

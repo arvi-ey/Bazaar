@@ -64,6 +64,22 @@ exports.GetAllProduct = async (req, res) => {
     }
 }
 
+exports.GetAllProductAdmin = async (req, res) => {
+    try {
+        const Product = await ProductModel.find()
+        res.status(200).json({
+            message: "Fetch all product successfull",
+            status: "successfull",
+            data: Product
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            message: error.mesage
+        })
+    }
+}
+
 
 exports.GetSingleProduct = async (req, res) => {
     const { id } = req.params

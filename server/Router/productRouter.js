@@ -1,6 +1,6 @@
 const express = require('express')
 const Router = express.Router()
-const { AddProduct, UpdateProduct, GetAllProduct, GetSingleProduct, GetAllProductByCategory } = require("../Controller/productController")
+const { AddProduct, UpdateProduct, GetAllProduct, GetSingleProduct, GetAllProductByCategory, GetAllProductsAdmin } = require("../Controller/productController")
 
 Router.route('/addproduct')
     .post(AddProduct)
@@ -8,7 +8,7 @@ Router.route('/addproduct')
 Router.route('/updateproduct/:id')
     .patch(UpdateProduct)
 
-Router.route('/getallproducts')
+Router.route('/getproducts')
     .get(GetAllProduct)
 
 Router.route('/getproduct/:id')
@@ -16,5 +16,8 @@ Router.route('/getproduct/:id')
 
 Router.route('/getproductcategory/:category')
     .get(GetAllProductByCategory)
+
+Router.route('/getallproducts')
+    .get(GetAllProductsAdmin)
 
 module.exports = Router
