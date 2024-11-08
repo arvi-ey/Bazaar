@@ -154,7 +154,7 @@ export default function BannerTable() {
                                     </TableCell>
                                     <TableCell align="center">
                                         <div className="flex justify-center">
-                                            <img src={row.categoryImage} height={100} width={100} alt={row.categoryName} className="rounded-md" />
+                                            <img src={row.categoryImage} height={45} width={45} alt={row.categoryName} className="rounded-md" />
                                         </div>
                                     </TableCell>
                                     <TableCell align="right">

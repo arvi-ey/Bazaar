@@ -160,7 +160,7 @@ export default function index() {
 
     return (
         <>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper}  >
                 <div className='flex items-center  mb-5'>
                     <div className="w-[90%] font-extrabold text-xl ml-3">
                         Products
@@ -212,7 +212,7 @@ export default function index() {
                                         row.images && row.images.length > 0 ?
                                             <TableCell align="center">
                                                 <div className="flex justify-center">
-                                                    <img src={row.images[0]} height={100} width={100} alt={row.images[0]} className="rounded-md" />
+                                                    <img src={row.images[0]} height={50} width={50} alt={row.images[0]} className="rounded-md" />
                                                 </div>
                                             </TableCell>
                                             : null

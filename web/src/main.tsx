@@ -14,6 +14,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './components/Dashboard';
 import UserHome from './components/UserHome/'
 import Unauthorized from './components/Unauthorized/index.tsx';
+import Product from './components/Product'
+import Category from './components/Category'
+import Banner from './components/Banner'
 
 
 const router = createBrowserRouter([
@@ -35,6 +38,20 @@ const router = createBrowserRouter([
       {
         path: '/dashboard',
         element: <Dashboard />,
+        children: [
+          {
+            index: true,
+            element: <Banner />
+          },
+          {
+            path: 'product',
+            element: <Product />
+          },
+          {
+            path: 'category',
+            element: <Category />
+          },
+        ]
       },
     ],
   },
