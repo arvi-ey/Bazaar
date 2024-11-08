@@ -32,6 +32,7 @@ import UserImage from "../../assets/demo_user.jpg"
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import Banner from "../Banner/index"
 import Category from "../Category/index"
+import Product from "../Product/index"
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -276,7 +277,7 @@ export default function index() {
                 {
                     component === "Analytics" && <Analysis />
                     || component === "Users" && <User />
-                    || component === "Product" && <h1>Product</h1>
+                    || component === "Product" && <Product />
                     || component === "Order" && <h1>Order</h1>
                     || component === "Category" && <Category />
                     || component === "Setting" && <Settings />

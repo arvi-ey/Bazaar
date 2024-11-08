@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/toolkit'
 import { URL } from "../../config"
 import axios from 'axios';
-import { UpdateBanner } from './bannerSlicer';
 
 
 export interface Category {
@@ -36,7 +35,6 @@ export const AddCategory = createAsyncThunk(
     async (data: AddCategory) => {
         try {
             const response = await axios.post(URL + `category/addcategory`, data, { withCredentials: true });
-            console.log(response.data.data)
             return response.data.data;
         }
         catch (error: any) {
