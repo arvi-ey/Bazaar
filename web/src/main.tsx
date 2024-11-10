@@ -17,7 +17,10 @@ import Unauthorized from './components/Unauthorized/index.tsx';
 import Product from './components/Product'
 import Category from './components/Category'
 import Banner from './components/Banner'
-
+import User from './components/User'
+import Analytics from "./components/Analytics"
+import Order from './components/Order'
+import Settings from './components/Settings'
 
 const router = createBrowserRouter([
   {
@@ -41,6 +44,10 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
+            element: <Analytics />
+          },
+          {
+            path: 'banner',
             element: <Banner />
           },
           {
@@ -48,8 +55,20 @@ const router = createBrowserRouter([
             element: <Product />
           },
           {
+            path: 'order',
+            element: <Order />
+          },
+          {
             path: 'category',
             element: <Category />
+          },
+          {
+            path: 'settings',
+            element: <Settings />
+          },
+          {
+            path: 'user',
+            element: <User />
           },
         ]
       },

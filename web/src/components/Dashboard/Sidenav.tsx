@@ -1,33 +1,32 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../../../../Redux/Store/index"
-import SettingsIcon from '@mui/icons-material/Settings';
-import UserImage from "../../assets/demo_user.jpg"
+import { useNavigate } from 'react-router-dom';
+import { RouteData } from './NavigationData';
+import AdminInfo from './AdminInfo';
+import logo from "../../assets/Bazaar_web_logo.svg"
 const Sidenav = () => {
-    const { user, error, loading } = useSelector((state: RootState) => state.user)
-    return (
-        <nav style={{ width: '250px', borderRight: '1px solid #ccc', padding: '20px' }}>
-            <ul>
-                <li><Link to="">Banner</Link></li>
-                <li><Link to="product">Product</Link></li>
-                <li><Link to="category">Category</Link></li>
-            </ul>
-            <div className={`mb-20 flex gap-2 ml-1 items-center cursor-pointer hover:bg-slate-100`} >
-                <img src={user?.profile_picture ? user.profile_picture : UserImage} alt="user_image" width="60px" height="60" style={{ width: "50px", height: "50px", borderRadius: "50%" }} />
 
-                <div>
-                    <p className='text-sm  text-TEXT_COLOR' >{user?.name}</p>
-                    <p className='text-sm  text-TEXT_COLOR' >{user?.email}</p>
-                </div>
-                <div className='gap-1 flex flex-col'>
-                    <div className='h-1 w-1 rounded-full bg-TEXT_COLOR' ></div>
-                    <div className='h-1 w-1 rounded-full bg-TEXT_COLOR' ></div>
-                    <div className='h-1 w-1 rounded-full bg-TEXT_COLOR' ></div>
-                </div>
+    const navigate = useNavigate()
+
+    return (
+        <div style={{ width: "15%", borderRight: '1px solid #ccc', paddingTop: '25px' }} className='flex flex-col items-center'>
+            <div className='w-full flex justify-center' >
+                <img src={logo} alt="Logo" style={{ height: 75, width: 75 }} />
             </div>
-        </nav>
+            {
+                RouteData.map((item, index) => (
+                    <div key={index} className={`flex flex-col gap-4 w-[95%] mt-5 cursor-pointer hover:bg-slate-100 `} onClick={() => navigate(`${item.route}`)}>
+                        <div className={`w-full pl-5 flex items-center rounded-md h-11 gap-4 cursor-pointer hover:bg-slate-100 `} >
+                            <div>
+                                {item.icon}
+                            </div>
+                            <p className={`font-normal text-base `}>{item.text}</p>
+                        </div>
+                    </div>
+                ))
+            }
+            <div className={` mt-24 py-4 rounded-md flex gap-1 ml-1 items-center cursor-pointer hover:bg-slate-100`} >
+                <AdminInfo />
+            </div>
+        </div>
     )
 }
 

@@ -16,6 +16,11 @@ export interface GetProduct {
     deliveryTime: number
 }
 
+export interface UpdateProduct {
+    data: GetProduct;
+    id: string;
+}
+
 
 export const GetAllProducts = createAsyncThunk('getallproducts', async () => {
     try {
@@ -29,7 +34,7 @@ export const GetAllProducts = createAsyncThunk('getallproducts', async () => {
 
 
 export const AddProduct = createAsyncThunk(
-    'addbanner',
+    'addproduct',
     async (data: GetProduct) => {
         try {
             const response = await axios.post(URL + `products/addproduct`, data, { withCredentials: true });
@@ -42,6 +47,18 @@ export const AddProduct = createAsyncThunk(
     }
 )
 
+export const UpdateProductData = createAsyncThunk(
+    'updateddbanner',
+    async ({ data, id }: UpdateProduct) => {
+        try {
+            const response = await axios.patch(URL + `products/updateproduct/${id}`, data, { withCredentials: true });
+            return response.data.data;
+        }
+        catch (error: any) {
+            return isRejectedWithValue(error.response?.data?.message || "Failed to Update Product");
+        }
+    }
+)
 export const productSlice = createSlice({
     name: 'products',
     initialState: {
@@ -73,6 +90,18 @@ export const productSlice = createSlice({
                 state.products = [...state.products, action.payload];
             })
             .addCase(AddProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as any;
+            })
+            .addCase(UpdateProductData.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(UpdateProductData.fulfilled, (state, action) => {
+                state.loading = false;
+                state.products = state.products.map((product) => product._id === action.payload._id ? action.payload : product);
+            })
+            .addCase(UpdateProductData.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as any;
             })

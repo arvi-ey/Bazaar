@@ -28,9 +28,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../Redux/Store';
 import { useEffect, useState } from 'react';
 import { AppDispatch } from '../../../../Redux/Store';
-import { AddProduct, GetAllProducts, GetProduct } from "../../../../Redux/Slice/productsSlicer"
+import { AddProduct, GetAllProducts, GetProduct, UpdateProduct, UpdateProductData } from "../../../../Redux/Slice/productsSlicer"
 import { GetAllCategory } from '../../../../Redux/Slice/categorySlicer';
-import { TabBarIcon } from '../../../../components/navigation/TabBarIcon';
 
 interface Image {
     img1: string,
@@ -51,6 +50,7 @@ export default function index() {
         ratings: 0,
         title: '',
         deliveryTime: 0,
+        _id: ""
     });
     const [searchText, setSearchText] = React.useState<string>('');
     const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
@@ -89,14 +89,22 @@ export default function index() {
             ratings: 0,
             title: '',
             deliveryTime: 0,
+            _id: ""
         });
 
         setIsEditMode(false);
         setOpen(true);
     };
 
+
     const handleOpenEditDialog = (row: typeof currentRow, index: number) => {
         setCurrentRow(row);
+        setImage({
+            img1: row.images[0],
+            img2: row.images[1],
+            img3: row.images[2]
+        })
+        setselectCategory(row.category)
         setEditingIndex(index);
         setIsEditMode(true);
         setOpen(true);
@@ -107,26 +115,22 @@ export default function index() {
     };
 
     const handleSave = async () => {
+        const obj: GetProduct = {
+            title: currentRow.title,
+            description: currentRow.description,
+            price: Number(currentRow.price),
+            category: selectCategory,
+            stock: Number(currentRow.stock),
+            images: [image.img1, image.img2, image.img3],
+            deliveryTime: Number(currentRow.deliveryTime),
+        }
         if (isEditMode && editingIndex !== null) {
-            // const { categoryImage, categoryName, _id } = currentRow;
-            // await dispatch(UpdateCategory({
-            //     data: {
-            //         categoryImage,
-            //         categoryName,
-            //         _id,
-            //     },
-            //     id: _id
-            // }));
+            const { _id } = currentRow;
+            await dispatch(UpdateProductData({
+                data: obj,
+                id: _id
+            }))
         } else {
-            const obj: GetProduct = {
-                title: currentRow.title,
-                description: currentRow.description,
-                price: Number(currentRow.price),
-                category: selectCategory,
-                stock: Number(currentRow.stock),
-                images: [image.img1, image.img2, image.img3],
-                deliveryTime: Number(currentRow.deliveryTime),
-            };
             await dispatch(AddProduct(obj));
         }
         handleClose();
@@ -154,9 +158,6 @@ export default function index() {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(event.target.value)
     }
-
-    // const FilteredData = rows.filter(row => row.categoryName.toLowerCase().includes(searchText));
-
 
     return (
         <>
@@ -229,8 +230,7 @@ export default function index() {
                                     <TableCell align="right">
                                         <EditIcon
                                             className="cursor-pointer"
-                                            // onClick={() => handleOpenEditDialog(row, index)}
-                                            onClick={() => console.log(row)}
+                                            onClick={() => handleOpenEditDialog(row, index)}
                                         />
                                     </TableCell>
                                 </TableRow>
@@ -284,7 +284,7 @@ export default function index() {
                         label="Product Image 1"
                         type="text"
                         fullWidth
-                        value={image.img1}
+                        value={image.img1 || ""}
                         onChange={HandleImnageChange}
                     />
                     <TextField
@@ -293,7 +293,7 @@ export default function index() {
                         label="Product Image 2"
                         type="text"
                         fullWidth
-                        value={image.img2}
+                        value={image.img2 || ""}
                         onChange={HandleImnageChange}
                     />
                     <TextField
@@ -302,7 +302,7 @@ export default function index() {
                         label="Product Image 3"
                         type="text"
                         fullWidth
-                        value={image.img3}
+                        value={image.img3 || ""}
                         onChange={HandleImnageChange}
                     />
                     <FormControl fullWidth>
