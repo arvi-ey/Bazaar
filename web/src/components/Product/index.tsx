@@ -28,9 +28,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../Redux/Store';
 import { useEffect, useState } from 'react';
 import { AppDispatch } from '../../../../Redux/Store';
-import { AddProduct, GetAllProducts, GetProduct, UpdateProduct, UpdateProductData } from "../../../../Redux/Slice/productsSlicer"
+import { AddProduct, DeleteProduct, GetAllProducts, GetProduct, UpdateProduct, UpdateProductData } from "../../../../Redux/Slice/productsSlicer"
 import { GetAllCategory } from '../../../../Redux/Slice/categorySlicer';
-
+import SnackBar from '../../Common/Snackbar';
+import DeleteIcon from '@mui/icons-material/Delete';
 interface Image {
     img1: string,
     img2: string,
@@ -55,7 +56,7 @@ export default function index() {
     const [searchText, setSearchText] = React.useState<string>('');
     const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const { products, } = useSelector((state: RootState) => state.product)
     const { category, } = useSelector((state: RootState) => state.category)
     const [selectCategory, setselectCategory] = React.useState('');
@@ -64,7 +65,12 @@ export default function index() {
         img2: '',
         img3: '',
     })
-
+    const [opendelete, setOpenDelete] = React.useState(false);
+    const [deletData, setDeleteData] = React.useState<GetProduct>();
+    const [openSnackBar, setOpenSnackBar] = React.useState({
+        open: false,
+        data: ""
+    })
     //////addddddddddddddddddddd
     const handleChangeSelect = (event: SelectChangeEvent) => {
         setselectCategory(event.target.value as string);
@@ -127,12 +133,14 @@ export default function index() {
         }
         if (isEditMode && editingIndex !== null) {
             const { _id } = currentRow;
-            await dispatch(UpdateProductData({
+            const data = await dispatch(UpdateProductData({
                 data: obj,
                 id: _id
             }))
+            if (data.payload.message) HandleSnackbar(data.payload.message)
         } else {
-            await dispatch(AddProduct(obj));
+            const data = await dispatch(AddProduct(obj));
+            if (data.payload.message) HandleSnackbar(data.payload.message)
         }
         handleClose();
     };
@@ -158,6 +166,34 @@ export default function index() {
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(event.target.value)
+    }
+
+    const HandleDelete = (row: GetProduct) => {
+        setOpenDelete(true);
+        setDeleteData(row)
+    }
+
+
+    const HandleSnackbar = (data: string) => {
+        setOpenSnackBar({ open: true, data });
+        setTimeout(() => {
+            setOpenSnackBar({ ...openSnackBar, open: false });
+        }, 2000)
+    }
+
+    const DeleteRowData = async () => {
+        if (deletData) {
+            try {
+                const data = await dispatch(DeleteProduct(deletData._id));
+                if (data.payload.message) HandleSnackbar(data.payload.message)
+            }
+            catch (error) {
+                console.error(error);
+            }
+            finally {
+                setOpenDelete(false);
+            }
+        }
     }
 
     return (
@@ -188,7 +224,7 @@ export default function index() {
                         <TableRow>
                             <TableCell style={{ fontWeight: "bolder" }}>Name</TableCell>
                             <TableCell align="center" style={{ fontWeight: "bolder" }}>Category</TableCell>
-                            <TableCell align="center" style={{ fontWeight: "bolder" }}>Description</TableCell>
+                            <TableCell align="center" style={{ fontWeight: "bolder", width: "20%" }}>Description</TableCell>
                             <TableCell align="center" style={{ fontWeight: "bolder" }}>Image</TableCell>
                             <TableCell align="center" style={{ fontWeight: "bolder" }}>Price</TableCell>
                             <TableCell align="center" style={{ fontWeight: "bolder" }}>Stock</TableCell>
@@ -230,8 +266,12 @@ export default function index() {
                                     </TableCell>
                                     <TableCell align="right">
                                         <EditIcon
-                                            className="cursor-pointer"
+                                            className="cursor-pointer text-EDIT_COLOR"
                                             onClick={() => handleOpenEditDialog(row, index)}
+                                        />
+                                        <DeleteIcon
+                                            className="cursor-pointer text-red-700 ml-6"
+                                            onClick={() => HandleDelete(row)}
                                         />
                                     </TableCell>
                                 </TableRow>
@@ -239,7 +279,7 @@ export default function index() {
                     </TableBody>
                 </Table>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 15, 20]}
+                    rowsPerPageOptions={[10, 15, 20]}
                     component="div"
                     count={rows.length}
                     rowsPerPage={rowsPerPage}
@@ -360,6 +400,21 @@ export default function index() {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Dialog open={opendelete} onClose={handleClose}>
+                <DialogContent>Are you sure you want to delete the category "{`${deletData?.title}`}"?. This action cannot be undone.</DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="error">
+                        Cancel
+                    </Button>
+                    <Button onClick={DeleteRowData} color="primary">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <SnackBar
+                open={openSnackBar.open}
+                data={openSnackBar.data}
+            />
         </>
     );
 }

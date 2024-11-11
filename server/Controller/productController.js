@@ -44,6 +44,20 @@ exports.UpdateProduct = async (req, res) => {
     }
 }
 
+exports.DeleteProduct = async (req, res) => {
+    const { id } = req.params
+    if (!id) return res.status(404).json({ message: "Missing data" })
+    try {
+        const DeletedProduct = await ProductModel.findByIdAndDelete(id)
+        res.status(200).json({ message: "Product deleted successfully", data: DeletedProduct })
+    }
+    catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
 
 exports.GetAllProduct = async (req, res) => {
     const page = parseInt(req.query.page) || 1

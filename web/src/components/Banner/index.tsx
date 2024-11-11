@@ -20,11 +20,13 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddBanner, GetBanners, UpdateBanner } from '../../../../Redux/Slice/bannerSlicer';
+import { AddBanner, GetBanners, UpdateBanner, DeleteBanner } from '../../../../Redux/Slice/bannerSlicer';
 import { RootState } from '../../../../Redux/Store';
 import { useEffect } from 'react';
 import { Banner } from '../../../../Redux/Slice/bannerSlicer';
 import { AppDispatch } from '../../../../Redux/Store';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SnackBar from '../../Common/Snackbar';
 
 export default function BannerTable() {
     const dispatch = useDispatch<AppDispatch>();
@@ -36,11 +38,17 @@ export default function BannerTable() {
         image: '',
         _id: ""
     });
+    const [opendelete, setOpenDelete] = React.useState(false);
+    const [deletData, setDeleteData] = React.useState<Banner>();
     const [searchText, setSearchText] = React.useState<string>('');
     const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const { banner, error, loading } = useSelector((state: RootState) => state.banner)
+    const [openSnackBar, setOpenSnackBar] = React.useState({
+        open: false,
+        data: ""
+    })
 
     useEffect(() => {
         dispatch(GetBanners());
@@ -68,12 +76,13 @@ export default function BannerTable() {
 
     const handleClose = () => {
         setOpen(false);
+        setOpenDelete(false)
     };
 
     const handleSave = async () => {
         if (isEditMode && editingIndex !== null) {
             const { image, title, _id } = currentRow;
-            await dispatch(UpdateBanner({
+            const data = await dispatch(UpdateBanner({
                 data: {
                     image,
                     title,
@@ -81,15 +90,24 @@ export default function BannerTable() {
                 },
                 id: _id
             }));
+            if (data.payload.message) HandleSnackbar(data.payload.message)
         } else {
             const { title, image } = currentRow;
-            await dispatch(AddBanner({
+            const data = await dispatch(AddBanner({
                 image,
                 title,
             }));
+            if (data.payload.message) HandleSnackbar(data.payload.message)
         }
         handleClose();
     };
+
+    const HandleSnackbar = (data: string) => {
+        setOpenSnackBar({ open: true, data });
+        setTimeout(() => {
+            setOpenSnackBar({ ...openSnackBar, open: false });
+        }, 2000)
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, id } = e.target;
@@ -108,6 +126,24 @@ export default function BannerTable() {
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(event.target.value)
+    }
+    const HandleDelete = (row: Banner) => {
+        setOpenDelete(true);
+        setDeleteData(row)
+    }
+    const DeleteRowData = async () => {
+        if (deletData) {
+            try {
+                const data = await dispatch(DeleteBanner(deletData._id));
+                if (data.payload.message) HandleSnackbar(data.payload.message)
+            }
+            catch (error) {
+                console.error(error);
+            }
+            finally {
+                setOpenDelete(false);
+            }
+        }
     }
 
     const FilteredData = rows.filter(row => row.title.toLowerCase().includes(searchText));
@@ -158,8 +194,12 @@ export default function BannerTable() {
                                     </TableCell>
                                     <TableCell align="right">
                                         <EditIcon
-                                            className="cursor-pointer"
+                                            className="cursor-pointer text-EDIT_COLOR"
                                             onClick={() => handleOpenEditDialog(row, index)}
+                                        />
+                                        <DeleteIcon
+                                            className="cursor-pointer text-red-700 ml-6"
+                                            onClick={() => HandleDelete(row)}
                                         />
                                     </TableCell>
                                 </TableRow>
@@ -167,7 +207,7 @@ export default function BannerTable() {
                     </TableBody>
                 </Table>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 15, 20]}
+                    rowsPerPageOptions={[10, 15, 20]}
                     component="div"
                     count={rows.length}
                     rowsPerPage={rowsPerPage}
@@ -208,6 +248,21 @@ export default function BannerTable() {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Dialog open={opendelete} onClose={handleClose}>
+                <DialogContent>Are you sure you want to delete the banner "{`${deletData?.title}`}"?. This action cannot be undone.</DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="error">
+                        Cancel
+                    </Button>
+                    <Button onClick={DeleteRowData} color="primary">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <SnackBar
+                open={openSnackBar.open}
+                data={openSnackBar.data}
+            />
         </>
     );
 }

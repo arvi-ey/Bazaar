@@ -39,7 +39,7 @@ export const AddProduct = createAsyncThunk(
         try {
             const response = await axios.post(URL + `products/addproduct`, data, { withCredentials: true });
             console.log(response.data.data)
-            return response.data.data;
+            return response.data;
         }
         catch (error: any) {
             return isRejectedWithValue(error.response?.data?.message || "Failed to add categories");
@@ -52,13 +52,25 @@ export const UpdateProductData = createAsyncThunk(
     async ({ data, id }: UpdateProduct) => {
         try {
             const response = await axios.patch(URL + `products/updateproduct/${id}`, data, { withCredentials: true });
-            return response.data.data;
+            return response.data;
         }
         catch (error: any) {
             return isRejectedWithValue(error.response?.data?.message || "Failed to Update Product");
         }
     }
 )
+
+export const DeleteProduct = createAsyncThunk(
+    'deleteproduct', async (id: string) => {
+        try {
+            const response = await axios.delete(URL + `products/updateproduct/${id}`, { withCredentials: true });
+            return response.data;
+        }
+        catch (error: any) {
+            return isRejectedWithValue(error.response?.data?.message || "Failed to Delete Product");
+        }
+    })
+
 export const productSlice = createSlice({
     name: 'products',
     initialState: {
@@ -87,7 +99,7 @@ export const productSlice = createSlice({
             })
             .addCase(AddProduct.fulfilled, (state, action) => {
                 state.loading = false;
-                state.products = [...state.products, action.payload];
+                state.products = [...state.products, action.payload.data];
             })
             .addCase(AddProduct.rejected, (state, action) => {
                 state.loading = false;
@@ -99,9 +111,21 @@ export const productSlice = createSlice({
             })
             .addCase(UpdateProductData.fulfilled, (state, action) => {
                 state.loading = false;
-                state.products = state.products.map((product) => product._id === action.payload._id ? action.payload : product);
+                state.products = state.products.map((product) => product._id === action.payload.data._id ? action.payload.data : product);
             })
             .addCase(UpdateProductData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as any;
+            })
+            .addCase(DeleteProduct.pending, (state, action) => {
+                state.loading = true;
+                state.error = null
+            })
+            .addCase(DeleteProduct.fulfilled, (state, action) => {
+                state.loading = false;
+                state.products = state.products.filter((product) => product._id !== action.payload.data._id);
+            })
+            .addCase(DeleteProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as any;
             })

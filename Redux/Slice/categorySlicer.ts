@@ -31,11 +31,11 @@ export const GetAllCategory = createAsyncThunk('getCategory', async () => {
 })
 
 export const AddCategory = createAsyncThunk(
-    'addbanner',
+    'addcategory',
     async (data: AddCategory) => {
         try {
             const response = await axios.post(URL + `category/addcategory`, data, { withCredentials: true });
-            return response.data.data;
+            return response.data;
         }
         catch (error: any) {
             return isRejectedWithValue(error.response?.data?.message || "Failed to add categories");
@@ -45,14 +45,26 @@ export const AddCategory = createAsyncThunk(
 
 
 export const UpdateCategory = createAsyncThunk(
-    'updateddbanner',
+    'updatecategory',
     async ({ data, id }: UpdateCategory) => {
         try {
             const response = await axios.patch(URL + `category/updatecategory/${id}`, data, { withCredentials: true });
-            return response.data.data;
+            return response.data;
         }
         catch (error: any) {
-            return isRejectedWithValue(error.response?.data?.message || "Failed to Update Banner");
+            return isRejectedWithValue(error.response?.data?.message || "Failed to Update Category");
+        }
+    }
+)
+
+export const DeleteCategory = createAsyncThunk(
+    'deletecategory', async (id: string) => {
+        try {
+            const response = await axios.delete(URL + `category/updatecategory/${id}`, { withCredentials: true });
+            return response.data;
+        }
+        catch (error: any) {
+            return isRejectedWithValue(error.response?.data?.message || "Failed to delete category");
         }
     }
 )
@@ -88,7 +100,7 @@ export const categorySlice = createSlice(
                 })
                 .addCase(AddCategory.fulfilled, (state, action) => {
                     state.loading = false;
-                    state.category = [...state.category, action.payload]
+                    state.category = [...state.category, action.payload.data]
                 })
                 .addCase(AddCategory.rejected, (state, action) => {
                     state.loading = false;
@@ -100,9 +112,21 @@ export const categorySlice = createSlice(
                 })
                 .addCase(UpdateCategory.fulfilled, (state, action) => {
                     state.loading = false;
-                    state.category = state.category.map(category => category._id === action.payload._id ? action.payload : category);
+                    state.category = state.category.map(category => category._id === action.payload.data._id ? action.payload.data : category);
                 })
                 .addCase(UpdateCategory.rejected, (state, action) => {
+                    state.loading = false;
+                    state.error = action.payload as any;
+                })
+                .addCase(DeleteCategory.pending, (state, action) => {
+                    state.loading = true;
+                    state.error = null;
+                })
+                .addCase(DeleteCategory.fulfilled, (state, action) => {
+                    state.loading = false;
+                    state.category = state.category.filter(data => data._id !== action.payload.data._id)
+                })
+                .addCase(DeleteCategory.rejected, (state, action) => {
                     state.loading = false;
                     state.error = action.payload as any;
                 })

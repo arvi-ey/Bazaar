@@ -1,12 +1,13 @@
 const express = require('express')
 const Router = express.Router()
-const { AddProduct, UpdateProduct, GetAllProduct, GetSingleProduct, GetAllProductByCategory, GetAllProductAdmin } = require("../Controller/productController")
+const { AddProduct, UpdateProduct, DeleteProduct, GetAllProduct, GetSingleProduct, GetAllProductByCategory, GetAllProductAdmin } = require("../Controller/productController")
 
 Router.route('/addproduct')
     .post(AddProduct)
 
 Router.route('/updateproduct/:id')
     .patch(UpdateProduct)
+    .delete(DeleteProduct)
 
 Router.route('/getproducts')
     .get(GetAllProduct)

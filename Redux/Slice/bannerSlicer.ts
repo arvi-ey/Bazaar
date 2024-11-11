@@ -35,7 +35,7 @@ export const AddBanner = createAsyncThunk(
     async (data: AddBanner) => {
         try {
             const response = await axios.post(URL + `banner/addbanner`, data, { withCredentials: true });
-            return response.data.data;
+            return response.data;
         }
         catch (error: any) {
             return isRejectedWithValue(error.response?.data?.message || "Failed to add Banner");
@@ -48,10 +48,24 @@ export const UpdateBanner = createAsyncThunk(
     async ({ data, id }: UpdateBannerPayload) => {
         try {
             const response = await axios.patch(URL + `banner/updatebanner/${id}`, data, { withCredentials: true });
-            return response.data.data;
+            return response.data;
         }
         catch (error: any) {
             return isRejectedWithValue(error.response?.data?.message || "Failed to Update Banner");
+        }
+    }
+)
+
+
+export const DeleteBanner = createAsyncThunk(
+    'deletebanner',
+    async (id: string) => {
+        try {
+            const response = await axios.delete(URL + `banner/updatebanner/${id}`, { withCredentials: true });
+            return response.data;
+        }
+        catch (error: any) {
+            return isRejectedWithValue(error.response?.data?.message || "Failed to delete banner");
         }
     }
 )
@@ -88,7 +102,7 @@ export const bannerSlice = createSlice({
             })
             .addCase(AddBanner.fulfilled, (state, action) => {
                 state.loading = false;
-                state.banner = [...state.banner, action.payload as Banner];
+                state.banner = [...state.banner, action.payload.data as Banner];
             })
             .addCase(AddBanner.rejected, (state, action) => {
                 state.loading = false;
@@ -100,7 +114,7 @@ export const bannerSlice = createSlice({
             })
             .addCase(UpdateBanner.fulfilled, (state, action) => {
                 state.loading = false;
-                const updatedBanner = action.payload as Banner;
+                const updatedBanner = action.payload.data as Banner;
                 state.banner = state.banner.map((banner) =>
                     banner._id === updatedBanner._id ? updatedBanner : banner
                 );
@@ -108,7 +122,19 @@ export const bannerSlice = createSlice({
             .addCase(UpdateBanner.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as any;
-            });
+            })
+            .addCase(DeleteBanner.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(DeleteBanner.fulfilled, (state, action) => {
+                state.loading = false;
+                state.banner = state.banner.filter(banner => banner._id !== action.payload.data._id)
+            })
+            .addCase(DeleteBanner.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as any;
+            })
     }
 })
 

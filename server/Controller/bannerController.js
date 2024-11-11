@@ -51,7 +51,6 @@ exports.DeleteBanner = async (req, res) => {
     }
 }
 
-
 exports.GettAllBanners = async (req, res) => {
     try {
         const banners = await BannerModel.find()

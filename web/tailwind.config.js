@@ -9,7 +9,8 @@ export default {
       colors: {
         MAIN_COLOR: "#a1ff00",
         SECONDARY_COLOR: "#a9eb3b",
-        TEXT_COLOR: "#6E6D7A"
+        TEXT_COLOR: "#6E6D7A",
+        EDIT_COLOR: "#6ca608"
       }
     },
   },

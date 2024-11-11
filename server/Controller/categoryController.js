@@ -40,6 +40,23 @@ exports.UpdateCategory = async (req, res) => {
     }
 }
 
+
+exports.DeleteCategory = async (req, res) => {
+    const { id } = req.params
+    if (!id) return res.status(404).json({ message: "Missing Data" })
+    try {
+        const DeletedData = await categoryModel.findByIdAndDelete(id)
+        if (DeletedData) {
+            res.status(200).json({ message: "Category deleted successfully", data: DeletedData })
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
 exports.GetAllCategory = async (req, res) => {
     try {
         const categories = await categoryModel.find()

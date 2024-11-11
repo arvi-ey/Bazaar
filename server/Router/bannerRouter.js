@@ -7,8 +7,6 @@ Router.route('/addbanner')
 
 Router.route('/updatebanner/:id')
     .patch(UpdateBanner)
-
-Router.route('/deletebanner/:id')
     .delete(DeleteBanner)
 
 Router.route('/allbanners')
