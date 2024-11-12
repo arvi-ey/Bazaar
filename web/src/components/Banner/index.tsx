@@ -58,7 +58,6 @@ export default function BannerTable() {
         setRows(banner)
     }, [banner])
 
-    // console.log(banner)
 
 
     const handleOpenAddDialog = () => {
