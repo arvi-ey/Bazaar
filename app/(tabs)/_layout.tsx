@@ -6,13 +6,16 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '@/Redux/Store';
 import { GetBanners } from '@/Redux/Slice/bannerSlicer';
+import { GetAllCategory } from '@/Redux/Slice/categorySlicer';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const dispatch = useDispatch<AppDispatch>();
 
+
   useEffect(() => {
     dispatch(GetBanners());
+    dispatch(GetAllCategory());
   }, [dispatch]);
 
   return (
