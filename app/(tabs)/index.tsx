@@ -9,31 +9,21 @@ import { RootState } from '@/Redux/Store';
 import { useSelector } from 'react-redux';
 import Category from '../Components/Category';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import Button from '../Components/Button';
+import { router, Router } from 'expo-router';
 
 export default function HomeScreen() {
   const theme = useColorScheme();
   const { banner } = useSelector((state: RootState) => state.banner)
   const { category } = useSelector((state: RootState) => state.category)
   const [searchProduct, setSearchProduct] = useState<string | number>("")
-  const [scrolling, setScrolling] = useState<Boolean>(false)
   const HandleSearchProduct = (text: string | number) => {
     setSearchProduct(text)
   }
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const currentOffset = event.nativeEvent.contentOffset.y;
-    if (currentOffset > 0) {
-      setScrolling(true);
-    } else {
-      setScrolling(false);
-    }
-  };
+
   return (
     <SafeAreaView style={[styles.MainView, { backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE }]} >
-      <ScrollView
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-      >
-        {/* <StatusBar hidden={scrolling ? true : false} /> */}
+      <ScrollView>
         <View style={{ width: width, alignItems: "center" }}>
           <TextInput
             value={searchProduct.toString()}
@@ -44,6 +34,7 @@ export default function HomeScreen() {
             placeholderTextColor={theme === "dark" ? Colors.WHITE : Colors.BLACK}
             placeholder='Search  products ....'
             onChangeText={HandleSearchProduct}
+            onFocus={() => router.push("/Allproducts")}
           />
         </View>
         <Slider
@@ -56,6 +47,15 @@ export default function HomeScreen() {
         <Category
           data={category}
         />
+        <View style={{ width, alignItems: 'center', marginBottom: 7 }} >
+          <Button
+            title="View all products"
+            buttonStyle={styles.ButtonStyle}
+            textStyle={styles.ButtonStyleText}
+            activeOpacity={0.8}
+            press={() => router.push("/Allproducts")}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -65,5 +65,15 @@ const styles = StyleSheet.create({
   MainView: {
     flex: 1,
     paddingTop: Platform.OS === 'android' ? 55 : 0,
+  },
+  ButtonStyle: {
+    backgroundColor: Colors.MAIN_COLOR,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 8
+  },
+  ButtonStyleText: {
+    fontFamily: Font.Medium,
+    fontSize: 15
   }
 });

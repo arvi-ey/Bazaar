@@ -21,7 +21,7 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
                 flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
                 return nextIndex;
             });
-        }, 2000);
+        }, 2500);
         return () => clearInterval(interval);
     }, []);
 

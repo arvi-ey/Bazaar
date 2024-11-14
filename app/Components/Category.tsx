@@ -13,7 +13,7 @@ const Category: React.FC<CategoryProps> = ({ data }) => {
 
     const renderItem: FlatListProps<category>['renderItem'] = ({ item }) => (
         <View style={{ position: "relative", }} >
-            <Image source={{ uri: item.categoryImage }} style={{ opacity: 0.8, width: 200, borderRadius: 12, height: 300, marginLeft: 10, marginRight: 10 }} resizeMode="cover" />
+            <Image source={{ uri: item.categoryImage }} style={{ width: 200, borderRadius: 12, height: 300, marginLeft: 10, marginRight: 10 }} resizeMode="cover" />
             <View style={{ position: "absolute", alignSelf: "center", bottom: 20 }}>
                 <Text style={{ color: Colors.WHITE, fontSize: 28, fontFamily: Font.Bold }}>{item.categoryName}</Text>
             </View>
