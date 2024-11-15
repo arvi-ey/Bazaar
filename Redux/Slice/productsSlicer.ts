@@ -21,10 +21,15 @@ export interface UpdateProduct {
     id: string;
 }
 
+export interface GetProducts {
+    page: number;
+    limit: number;
+    desc: string;
+}
 
 export const GetAllProducts = createAsyncThunk('getallproducts', async () => {
     try {
-        const response = await axios.get(URL + `products/getproducts`, { withCredentials: true })
+        const response = await axios.get(URL + `products/getallproducts`, { withCredentials: true })
         return response.data.data
     }
     catch (error: any) {
@@ -32,6 +37,16 @@ export const GetAllProducts = createAsyncThunk('getallproducts', async () => {
     }
 })
 
+export const GetProducts = createAsyncThunk('getproducts', async (data: GetProducts) => {
+    const { page, limit, desc } = data;
+    try {
+        const response = await axios.get(URL + `products/getproducts?page=${page}&limit=${limit}&sort=${desc}`, { withCredentials: true })
+        return response.data
+    }
+    catch (error: any) {
+        return isRejectedWithValue(error.response?.data?.message || "Failed to get products");
+    }
+})
 
 export const AddProduct = createAsyncThunk(
     'addproduct',
@@ -90,6 +105,18 @@ export const productSlice = createSlice({
                 state.products = action.payload;
             })
             .addCase(GetAllProducts.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as any;
+            })
+            .addCase(GetProducts.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(GetProducts.fulfilled, (state, action) => {
+                state.loading = false;
+                state.products = action.payload.data;
+            })
+            .addCase(GetProducts.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as any;
             })

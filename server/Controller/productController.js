@@ -63,8 +63,13 @@ exports.GetAllProduct = async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 10
     const skip = (page - 1) * limit
+
+    const sortquery = req.query.sort || "dsc"
+    const sortOption = sortquery === "dsc" ? -1 : 1
+
+
     try {
-        const Product = await ProductModel.find().skip(skip).limit(limit)
+        const Product = await ProductModel.find().sort({ price: sortOption }).skip(skip).limit(limit)
         res.status(200).json({
             message: "Fetch all product successfull",
             status: "successfull",
@@ -80,7 +85,7 @@ exports.GetAllProduct = async (req, res) => {
 
 exports.GetAllProductAdmin = async (req, res) => {
     try {
-        const Product = await ProductModel.find()
+        const Product = await ProductModel.find().sort({ price: - 1 })
         res.status(200).json({
             message: "Fetch all product successfull",
             status: "successfull",

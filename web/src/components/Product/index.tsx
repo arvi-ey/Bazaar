@@ -104,6 +104,7 @@ export default function index() {
     };
 
 
+
     const handleOpenEditDialog = (row: typeof currentRow, index: number) => {
         setCurrentRow(row);
         setImage({
@@ -119,6 +120,7 @@ export default function index() {
 
     const handleClose = () => {
         setOpen(false);
+        setImage({ img1: "", img2: "", img3: "" })
     };
 
     const handleSave = async () => {
@@ -138,9 +140,11 @@ export default function index() {
                 id: _id
             }))
             if (data.payload.message) HandleSnackbar(data.payload.message)
+            setImage({ img1: "", img2: "", img3: "" })
         } else {
             const data = await dispatch(AddProduct(obj));
             if (data.payload.message) HandleSnackbar(data.payload.message)
+            setImage({ img1: "", img2: "", img3: "" })
         }
         handleClose();
     };
