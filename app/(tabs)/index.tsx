@@ -11,7 +11,7 @@ import Category from '../Components/Category';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Button from '../Components/Button';
 import { router, Router } from 'expo-router';
-
+import Logo from "../../assets/images/App_logo.png"
 export default function HomeScreen() {
   const theme = useColorScheme();
   const { banner } = useSelector((state: RootState) => state.banner)
@@ -22,8 +22,8 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.MainView, { backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE }]} >
-      <ScrollView>
+    <ScrollView style={{ backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE }}>
+      <SafeAreaView style={[styles.MainView, { backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE }]} >
         <View style={{ width: width, alignItems: "center" }}>
           <TextInput
             value={searchProduct.toString()}
@@ -56,15 +56,15 @@ export default function HomeScreen() {
             press={() => router.push("/Allproducts")}
           />
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ScrollView >
   );
 }
 
 const styles = StyleSheet.create({
   MainView: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? 55 : 0,
+    paddingTop: Platform.OS === 'android' ? 45 : 0,
   },
   ButtonStyle: {
     backgroundColor: Colors.MAIN_COLOR,

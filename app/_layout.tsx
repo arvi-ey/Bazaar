@@ -8,6 +8,7 @@ import { Provider } from 'react-redux'
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { store } from '@/Redux/Store';
 import { Font } from '@/Font';
+import { Colors } from '@/Theme';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -37,19 +38,27 @@ export default function RootLayout() {
     return null;
   }
 
+  const globalHeaderStyles = {
+    headerStyle: {
+      backgroundColor: colorScheme === 'dark' ? Colors.BLACK : Colors.WHITE,
+    },
+    headerTitleStyle: {
+      fontFamily: Font.Medium,
+      fontSize: 20,
+      color: colorScheme === 'dark' ? Colors.WHITE : Colors.BLACK,
+    },
+    headerTintColor: colorScheme === 'dark' ? Colors.WHITE : Colors.BLACK, // Color for back buttons and icons
+  };
+
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Provider store={store}>
         <Stack
+          screenOptions={globalHeaderStyles}
         >
           <Stack.Screen name="(tabs)" options={{ headerShown: false, }} />
-          <Stack.Screen name="Allproducts" options={({ navigation }) => ({
-            headerShown: true,
-            headerTitleStyle: {
-              fontFamily: Font.Medium,
-              fontSize: 20,
-            },
-          })} />
+          <Stack.Screen name="Allproducts" />
           <Stack.Screen name="+not-found" />
         </Stack>
       </Provider>

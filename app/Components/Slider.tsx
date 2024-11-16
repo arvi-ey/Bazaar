@@ -14,16 +14,17 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
     const theme = useColorScheme();
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => {
-                const nextIndex = prevIndex === data.length - 1 ? 0 : prevIndex + 1;
-                flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
-                return nextIndex;
-            });
-        }, 2500);
-        return () => clearInterval(interval);
-    }, []);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setCurrentIndex((prevIndex) => {
+    //             // console.log(data.length)
+    //             const nextIndex = prevIndex === data.length - 1 ? 0 : prevIndex + 1;
+    //             flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+    //             return nextIndex;
+    //         });
+    //     }, 2500);
+    //     return () => clearInterval(interval);
+    // }, []);
 
     const renderItem: FlatListProps<Banner>['renderItem'] = ({ item }) => (
         <View style={{ width, alignItems: 'center', }}>
@@ -37,7 +38,7 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
                 ref={flatListRef}
                 data={data}
                 renderItem={renderItem}
-                keyExtractor={(item) => item._id}
+                keyExtractor={(item, index) => index.toString()}
                 horizontal
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
