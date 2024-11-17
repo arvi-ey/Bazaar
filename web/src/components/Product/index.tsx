@@ -129,7 +129,7 @@ export default function index() {
             description: currentRow.description,
             price: Number(currentRow.price),
             category: selectCategory,
-            stock: Number(currentRow.stock),
+            stock: Number(currentRow.stock) || 0,
             images: [image.img1, image.img2, image.img3],
             deliveryTime: Number(currentRow.deliveryTime),
         }

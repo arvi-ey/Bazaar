@@ -1,161 +1,53 @@
-import { StyleSheet, Text, View, FlatList, Keyboard, TextInput, Dimensions, Image, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react'
+import { StyleSheet, Text, View, FlatList, Keyboard, TextInput, Dimensions, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react'
 import { Colors } from '@/Theme';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Font } from '@/Font';
 import { Entypo } from '@expo/vector-icons';
 import Rating from './Rating';
 const { height, width } = Dimensions.get("window")
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from '@/Redux/Store';
+import { GetAllProducts, GetProducts } from '@/Redux/Slice/productsSlicer';
 
 const ProductBox = () => {
-
+    const { products, hasMore, currentPage, loading } = useSelector((state: RootState) => state.product)
     const theme = useColorScheme();
+    const dispatch = useDispatch<AppDispatch>();
+    const [page, setPage] = useState<number>(0)
 
+    useEffect(() => {
+        GetData()
+    }, [page])
+    async function GetData() {
+        if (hasMore) {
+            await dispatch(GetProducts({ page, limit: 6, dsc: 'dsc' }))
+        }
+    }
 
-
-    const demoProducts = [
-        {
-            title: "Wireless Bluetooth Headphones",
-            description: "High-quality wireless headphones with noise cancellation.",
-            price: 120,
-            category: "Electronics",
-            stock: 50,
-            images: [
-                "https://images.bewakoof.com/t1080/men-s-brown-standard-typography-super-loose-fit-flat-knit-sweater-597245-1726047157-1.jpg",
-                "https://m.media-amazon.com/images/I/71K4WoY2EWL._SY879_.jpg"
-            ],
-            ratings: 4.5,
-            numReviews: 25,
-            createdAt: new Date(),
-            deliveryTime: 5
-        },
-        {
-            title: "Wireless Bluetooth Headphones",
-            description: "High-quality wireless headphones with noise cancellation.",
-            price: 120,
-            category: "Electronics",
-            stock: 50,
-            images: [
-                "https://images.bewakoof.com/t1080/men-s-beige-black-graphic-printed-super-loose-fit-sweater-644664-1721727020-1.jpg",
-                "https://m.media-amazon.com/images/I/71K4WoY2EWL._SY879_.jpg"
-            ],
-            ratings: 1.5,
-            numReviews: 25,
-            createdAt: new Date(),
-            deliveryTime: 5
-        },
-        {
-            title: "Wireless Bluetooth Headphones",
-            description: "High-quality wireless headphones with noise cancellation.",
-            price: 120,
-            category: "Electronics",
-            stock: 50,
-            images: [
-                "https://images.bewakoof.com/t1080/men-s-gardenia-oversized-flatknit-sweater-597204-1721740129-1.jpg",
-                "https://m.media-amazon.com/images/I/71K4WoY2EWL._SY879_.jpg"
-            ],
-            ratings: 3.5,
-            numReviews: 25,
-            createdAt: new Date(),
-            deliveryTime: 5
-        },
-        {
-            title: "Wireless Bluetooth Headphones",
-            description: "High-quality wireless headphones with noise cancellation.",
-            price: 120,
-            category: "Electronics",
-            stock: 50,
-            images: [
-                "https://images.bewakoof.com/t1080/men-s-black-orange-typography-oversized-sweater-644666-1724993791-1.jpg",
-                "https://m.media-amazon.com/images/I/71K4WoY2EWL._SY879_.jpg"
-            ],
-            ratings: 2.5,
-            numReviews: 25,
-            createdAt: new Date(),
-            deliveryTime: 5
-        },
-        {
-            title: "Wireless Bluetooth Headphones",
-            description: "High-quality wireless headphones with noise cancellation.",
-            price: 120,
-            category: "Electronics",
-            stock: 50,
-            images: [
-                "https://images.bewakoof.com/t1080/men-s-brown-oversized-flat-knit-sweater-597250-1726047105-1.jpg",
-                "https://m.media-amazon.com/images/I/71K4WoY2EWL._SY879_.jpg"
-            ],
-            ratings: 0.5,
-            numReviews: 25,
-            createdAt: new Date(),
-            deliveryTime: 5
-        },
-        {
-            title: "Wireless Bluetooth Headphones",
-            description: "High-quality wireless headphones with noise cancellation.",
-            price: 120,
-            category: "Electronics",
-            stock: 50,
-            images: [
-                "https://images.bewakoof.com/t1080/men-s-blue-oversized-flat-knit-sweater-597244-1722429369-1.jpg",
-                "https://m.media-amazon.com/images/I/71K4WoY2EWL._SY879_.jpg"
-            ],
-            ratings: 4.5,
-            numReviews: 25,
-            createdAt: new Date(),
-            deliveryTime: 5
-        },
-        {
-            title: "Wireless Bluetooth Headphones",
-            description: "High-quality wireless headphones with noise cancellation.",
-            price: 120,
-            category: "Electronics",
-            stock: 50,
-            images: [
-                "https://images.bewakoof.com/t1080/men-s-blue-textured-sweater-651085-1728390664-1.jpg",
-                "https://m.media-amazon.com/images/I/71K4WoY2EWL._SY879_.jpg"
-            ],
-            ratings: 2.5,
-            numReviews: 25,
-            createdAt: new Date(),
-            deliveryTime: 5
-        },
-        {
-            title: "Wireless Bluetooth Headphones",
-            description: "High-quality wireless headphones with noise cancellation.",
-            price: 120,
-            category: "Electronics",
-            stock: 50,
-            images: [
-                "https://images.bewakoof.com/t1080/men-s-lilac-solid-oversized-sweater-497681-1670329726-1.jpg",
-                "https://m.media-amazon.com/images/I/71K4WoY2EWL._SY879_.jpg"
-            ],
-            ratings: 5,
-            numReviews: 25,
-            createdAt: new Date(),
-            deliveryTime: 5
-        },
-    ];
-
-
+    const ListEnd = () => {
+        setPage(page + 1)
+    }
     const renderData = ({ item }: any) => {
-        // console.log(data)
         return (
             <TouchableOpacity activeOpacity={0.8} style={{ height: 350, width: 185, backgroundColor: '', overflow: "hidden", borderColor: Colors.BLACK, borderRadius: 5, marginVertical: 2, marginHorizontal: 2 }}>
                 <View style={{ height: "87%", width: "100%", }} >
                     <Image source={{ uri: item.images[0] }} style={{ height: "100%", width: "100%", resizeMode: 'cover', borderRadius: 5 }} />
                 </View>
-                <View style={{ width: 180, overflow: "hidden", }}>
-                    <Text style={{ fontFamily: Font.Medium, paddingLeft: 5, }}>
-                        {item.title.length > 18 ? `${item.title.slice(0, 23)}...` : item.title}
+                <View style={{ width: 180, overflow: "hidden", marginTop: 2 }}>
+                    <Text style={{ fontFamily: Font.Medium, paddingLeft: 5, color: theme === "dark" ? Colors.WHITE : Colors.BLACK }}>
+                        {item.title.length > 18 ? `${item.title.slice(0, 18)}...` : item.title}
                     </Text>
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 20, }} >
-                        <Text style={{ paddingLeft: 5, fontFamily: Font.Medium, }}>
+                        <Text style={{ paddingLeft: 5, fontFamily: Font.Medium, color: theme === "dark" ? Colors.WHITE : Colors.BLACK }}>
                             ₹ {item.price}
                         </Text>
                         <Rating
                             maxRatingCount={5}
                             ratingValue={item.ratings}
                             selectedRatingColor={Colors.MAIN_COLOR}
+                            unSelectedRatingColor={theme === "dark" ? Colors.WHITE : Colors.BLACK}
                             size={13}
                         />
                     </View>
@@ -163,7 +55,6 @@ const ProductBox = () => {
             </TouchableOpacity >
         )
     }
-
     const SearchBox = () => {
         const [searchProduct, setSearchProduct] = useState<string | number>("")
         const HandleSearchProduct = (text: string | number) => {
@@ -174,6 +65,7 @@ const ProductBox = () => {
             Keyboard.dismiss()
             setSearchProduct("")
         }
+
         return (
             <View style={{ width: width - 20, marginBottom: 10, borderRadius: 12, alignItems: "center", gap: 10, flexDirection: "row", backgroundColor: theme === "dark" ? Colors.INPUT_BACKGROUND_DARK : Colors.INPUT_BACKGROUND, }}>
                 <TextInput
@@ -185,7 +77,6 @@ const ProductBox = () => {
                     placeholderTextColor={theme === "dark" ? Colors.WHITE : Colors.BLACK}
                     placeholder='Search  products ....'
                     onChangeText={HandleSearchProduct}
-                    autoFocus={true}
                 />
                 {
                     searchProduct ?
@@ -195,14 +86,31 @@ const ProductBox = () => {
             </View>
         )
     }
+    const renderFooter = () => {
+        return (
+            <View style={{ marginBottom: 40 }}>
+                {loading ?
+                    <ActivityIndicator size="large" color={Colors.MAIN_COLOR} />
+                    :
+                    <Text style={{ fontFamily: Font.SemiBold, color: Colors.MAIN_COLOR }}>
+                        {hasMore ? '' : 'No more products to load'}
+                    </Text>
+                }
+            </View>
+        );
+    };
 
     return (
         <View style={{ width, justifyContent: 'center', alignItems: 'center' }}>
             <FlatList
                 contentContainerStyle={{ width, marginTop: 10, justifyContent: 'center', alignItems: 'center' }}
                 ListHeaderComponent={SearchBox}
+                onEndReached={ListEnd}
+                showsVerticalScrollIndicator={false}
+                onEndReachedThreshold={0.1}
                 numColumns={2}
-                data={demoProducts}
+                data={products}
+                ListFooterComponent={renderFooter}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={(item) => renderData(item)}
             />

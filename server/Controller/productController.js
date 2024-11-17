@@ -61,7 +61,9 @@ exports.DeleteProduct = async (req, res) => {
 
 exports.GetAllProduct = async (req, res) => {
     const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 10
+    const limit = parseInt(req.query.limit) || 6
+    console.log("page", page)
+    console.log("limit", limit)
     const skip = (page - 1) * limit
 
     const sortquery = req.query.sort || "dsc"

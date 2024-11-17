@@ -7,13 +7,13 @@ export interface GetProduct {
     description: string;
     price: number;
     category: string;
-    stock: number;
+    stock?: number;
     images: string[];
     ratings?: number;
     numReviews?: number;
     title: string;
     createdAt?: Date;
-    deliveryTime: number
+    deliveryTime?: number
 }
 
 export interface UpdateProduct {
@@ -21,10 +21,10 @@ export interface UpdateProduct {
     id: string;
 }
 
-export interface GetProducts {
+export interface GetProductsData {
     page: number;
     limit: number;
-    desc: string;
+    dsc: string;
 }
 
 export const GetAllProducts = createAsyncThunk('getallproducts', async () => {
@@ -37,10 +37,10 @@ export const GetAllProducts = createAsyncThunk('getallproducts', async () => {
     }
 })
 
-export const GetProducts = createAsyncThunk('getproducts', async (data: GetProducts) => {
-    const { page, limit, desc } = data;
+export const GetProducts = createAsyncThunk('getproducts', async (data: GetProductsData) => {
+    const { page, limit, dsc } = data;
     try {
-        const response = await axios.get(URL + `products/getproducts?page=${page}&limit=${limit}&sort=${desc}`, { withCredentials: true })
+        const response = await axios.get(URL + `products/getproducts?page=${page}&limit=${limit}&sort=${dsc}`, { withCredentials: true })
         return response.data
     }
     catch (error: any) {
@@ -92,6 +92,8 @@ export const productSlice = createSlice({
         loading: false,
         products: [] as GetProduct[],
         error: null,
+        currentPage: 0,
+        hasMore: true,
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -114,7 +116,12 @@ export const productSlice = createSlice({
             })
             .addCase(GetProducts.fulfilled, (state, action) => {
                 state.loading = false;
-                state.products = action.payload.data;
+                if (action.payload.data.length === 0) {
+                    state.hasMore = false;
+                } else {
+                    state.products = [...state.products, ...action.payload.data];
+                    // state.currentPage += 1;
+                }
             })
             .addCase(GetProducts.rejected, (state, action) => {
                 state.loading = false;
