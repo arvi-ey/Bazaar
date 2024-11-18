@@ -10,12 +10,15 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '@/Redux/Store';
 import { GetAllProducts, GetProducts } from '@/Redux/Slice/productsSlicer';
+import { Router, router } from 'expo-router';
+import { useNavigation } from 'expo-router';
 
 const ProductBox = () => {
     const { products, hasMore, currentPage, loading } = useSelector((state: RootState) => state.product)
     const theme = useColorScheme();
     const dispatch = useDispatch<AppDispatch>();
     const [page, setPage] = useState<number>(0)
+    const navigation = useNavigation();
 
     useEffect(() => {
         GetData()
@@ -29,9 +32,18 @@ const ProductBox = () => {
     const ListEnd = () => {
         setPage(page + 1)
     }
+    const GoToProductdetails = (id: string) => {
+        router.push({
+            pathname: '/Product',
+            params: { id },
+        })
+    }
+
     const renderData = ({ item }: any) => {
         return (
-            <TouchableOpacity activeOpacity={0.8} style={{ height: 350, width: 185, backgroundColor: '', overflow: "hidden", borderColor: Colors.BLACK, borderRadius: 5, marginVertical: 2, marginHorizontal: 2 }}>
+            <TouchableOpacity
+                onPress={() => GoToProductdetails(item._id)}
+                activeOpacity={0.8} style={{ height: 350, width: 185, backgroundColor: '', overflow: "hidden", borderColor: Colors.BLACK, borderRadius: 5, marginVertical: 2, marginHorizontal: 2 }}>
                 <View style={{ height: "87%", width: "100%", }} >
                     <Image source={{ uri: item.images[0] }} style={{ height: "100%", width: "100%", resizeMode: 'cover', borderRadius: 5 }} />
                 </View>
