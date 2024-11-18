@@ -16,11 +16,11 @@ import ProductDetails from './Components/ProductDetails';
 const Product = () => {
     const theme = useColorScheme();
     const { id } = useLocalSearchParams();
-    console.log(id)
     return (
-        <View style={{ width, alignItems: 'center', backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE }} >
+        <ScrollView contentContainerStyle={{ width, flex: 1, alignItems: 'center', backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE }} >
             <ProductDetails id={id.toString()} />
-        </View>
+            {/* <Text style={{ color: Colors.WHITE }} >Product Details</Text> */}
+        </ScrollView>
     )
 }
 
