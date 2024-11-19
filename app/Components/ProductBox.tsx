@@ -32,17 +32,18 @@ const ProductBox = () => {
     const ListEnd = () => {
         setPage(page + 1)
     }
-    const GoToProductdetails = (id: string) => {
+    const GoToProductdetails = (id: string, category: string) => {
         router.push({
             pathname: '/Product',
-            params: { id },
+            params: { id, category },
         })
     }
 
     const renderData = ({ item }: any) => {
+        // console.log(item)
         return (
             <TouchableOpacity
-                onPress={() => GoToProductdetails(item._id)}
+                onPress={() => GoToProductdetails(item._id, item.category)}
                 activeOpacity={0.8} style={{ height: 350, width: 185, backgroundColor: '', overflow: "hidden", borderColor: Colors.BLACK, borderRadius: 5, marginVertical: 2, marginHorizontal: 2 }}>
                 <View style={{ height: "87%", width: "100%", }} >
                     <Image source={{ uri: item.images[0] }} style={{ height: "100%", width: "100%", resizeMode: 'cover', borderRadius: 5 }} />

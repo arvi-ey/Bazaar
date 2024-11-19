@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/toolkit'
 import { URL } from "../../config"
 import axios from 'axios';
-
+import { GetProduct } from './productsSlicer';
 
 export interface Category {
     categoryName: string,
@@ -69,6 +69,16 @@ export const DeleteCategory = createAsyncThunk(
     }
 )
 
+export const GetProductsByCategory = createAsyncThunk('category/getproducts', async (data: string) => {
+    try {
+        const response = await axios.get(URL + `products/getproductcategory/${data}`, { withCredentials: true })
+        return response.data
+    }
+    catch (error: any) {
+        return isRejectedWithValue(error.response?.data?.message || "Failed to get products");
+    }
+})
+
 
 export const categorySlice = createSlice(
     {
@@ -76,6 +86,7 @@ export const categorySlice = createSlice(
         initialState: {
             loading: false,
             category: [] as Category[],
+            productByCategory: [] as GetProduct[],
             error: null,
         },
         reducers: {},
@@ -127,6 +138,18 @@ export const categorySlice = createSlice(
                     state.category = state.category.filter(data => data._id !== action.payload.data._id)
                 })
                 .addCase(DeleteCategory.rejected, (state, action) => {
+                    state.loading = false;
+                    state.error = action.payload as any;
+                })
+                .addCase(GetProductsByCategory.pending, (state, action) => {
+                    state.loading = true;
+                    state.error = null;
+                })
+                .addCase(GetProductsByCategory.fulfilled, (state, action) => {
+                    state.loading = false;
+                    state.productByCategory = action.payload;
+                })
+                .addCase(GetProductsByCategory.rejected, (state, action) => {
                     state.loading = false;
                     state.error = action.payload as any;
                 })
