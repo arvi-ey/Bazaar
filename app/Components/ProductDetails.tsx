@@ -127,6 +127,12 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const handleCollapsePress = () => bottomSheetRef.current?.collapse();
     const snapeToIndex = (index: number) => bottomSheetRef.current?.snapToIndex(index);
 
+    const AddToCat = () => {
+        router.push({
+            pathname: '/Login'
+        })
+    }
+
     return (
         <GestureHandlerRootView style={{ flex: 1, width, alignItems: 'center', backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE, marginBottom: 20 }} >
             <FlatList
@@ -208,6 +214,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                 <Button
                     title='Add to Bag'
                     activeOpacity={0.8}
+                    press={AddToCat}
                     textStyle={styles.ButtonText}
                     buttonStyle={styles.ButtonStyle}
                 />

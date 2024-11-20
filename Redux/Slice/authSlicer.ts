@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/too
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { URL } from "../../config"
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
 export interface authState {
     name: string,
     email: string,
@@ -44,6 +45,55 @@ export const signinUser = createAsyncThunk(
     }
 );
 
+export const AppSignIn = createAsyncThunk(
+    'auth/appSignIn',
+    async (userData: SignInState) => {
+        try {
+            const response = await axios.post(URL + `auth/signin`, userData, { withCredentials: true });
+            if (response.data.authenticate === true && response.data.user && response.data.session) {
+                await SecureStore.setItemAsync("uid", response.data.session)
+                return response.data.user
+            }
+            return isRejectedWithValue("Sign in failed");
+        } catch (error: any) {
+            // console.log(error)
+            return isRejectedWithValue(error.response?.data?.message || "Sign in failed");
+        }
+    }
+)
+
+export const CheckAuth = createAsyncThunk(
+    'auth/checkAuth',
+    async () => {
+        const result = await SecureStore.getItemAsync("uid")
+        if (result) return result
+        else return null;
+    }
+)
+
+
+export const GetUserOnce = createAsyncThunk(
+    'auth/getuseronce',
+    async (req, res) => {
+        const session = await CheckAuth()
+        if (session !== null) {
+            try {
+                const response = await axios.get(URL + `user/checkappauth`, {
+                    headers: {
+                        Authorization: `Bearer ${session}`
+                    }
+                });
+                console.log(response)
+                return response.data.data;
+            }
+            catch (error: any) {
+                return isRejectedWithValue(error.response?.data?.message || "Session  failed");
+            }
+
+        }
+        else return null
+    }
+)
 
 
 export const authSlice = createSlice({
@@ -51,6 +101,7 @@ export const authSlice = createSlice({
     initialState: {
         loading: false,
         user: null,
+        uid: null,
         error: null
     },
     reducers: {

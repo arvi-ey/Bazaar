@@ -1,7 +1,7 @@
 const express = require('express')
 const Router = express.Router()
 const { UserSignIn, UserSignUp } = require("../Controller/authController")
-const { authenticate } = require("../Middleware/authMidleware")
+const { authenticate, verifyToken } = require("../Middleware/authMidleware")
 
 
 Router.route('/signin')
@@ -12,5 +12,8 @@ Router.route('/signup')
 
 Router.route('/checkauth')
     .get(authenticate)
+Router.route('/checkappauth')
+    .get(verifyToken)
+
 
 module.exports = Router
