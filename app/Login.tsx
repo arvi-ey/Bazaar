@@ -16,9 +16,16 @@ import { Router, router } from 'expo-router';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView, } from 'react-native-gesture-handler';
 import Button from './Components/Button';
+import { AppSignIn } from '@/Redux/Slice/authSlicer';
 
-
+export interface signInData {
+    email: string;
+    password: string;
+}
 const Login = () => {
+    const [data, setData] = useState<signInData>({ email: "", password: "" })
+    const dispatch = useDispatch<AppDispatch>();
+    const { user } = useSelector((state: RootState) => state.auth)
     const theme = useColorScheme();
     const [hidepasword, setHidePassword] = useState<boolean>(false)
     const Dark = theme === "dark" ? true : false
@@ -32,6 +39,10 @@ const Login = () => {
     const apple = require("../assets/images/apple.png")
     const google = require("../assets/images/google.png")
     const facebook = require("../assets/images/facebook.png")
+
+    const HandleSignUp = () => {
+        dispatch(AppSignIn(data))
+    }
     return (
         <View style={{ flex: 1, backgroundColor: Dark ? Colors.BLACK : Colors.WHITE, alignItems: 'center', paddingTop: 20 }} >
             <TouchableOpacity style={{ width }} onPress={() => router.back()} >
@@ -46,7 +57,9 @@ const Login = () => {
                 <TextInput
                     style={{ height: "100%", color: InputColor, fontFamily: InputFont, width: "85%", alignItems: 'center', fontSize: InputFontSize }}
                     placeholder="Enter Email"
+                    value={data?.email}
                     placeholderTextColor={Dark ? Colors.WHITE : Colors.BLACK}
+                    onChangeText={(text) => setData({ ...data, email: text })}
                 />
             </View>
             <View style={{ marginTop: 30, width: width - 20, backgroundColor: InputBG, borderRadius: 8, height: InPutHeight, flexDirection: "row", alignItems: 'center' }}>
@@ -54,7 +67,9 @@ const Login = () => {
                 <TextInput
                     style={{ height: "100%", color: InputColor, fontFamily: InputFont, width: "75%", alignItems: 'center', fontSize: InputFontSize }}
                     placeholder="Enter Password"
+                    value={data.password}
                     secureTextEntry={hidepasword}
+                    onChangeText={(text) => setData({ ...data, password: text })}
                     placeholderTextColor={Dark ? Colors.WHITE : Colors.BLACK}
                 />
                 <TouchableOpacity onPress={() => setHidePassword(!hidepasword)} style={{ height: "100%", justifyContent: 'center' }} >
@@ -69,6 +84,7 @@ const Login = () => {
             <Button
                 buttonStyle={{ marginTop: 10, borderRadius: 7, width: width - 40, backgroundColor: Colors.MAIN_COLOR, alignItems: "center", justifyContent: "center", height: 50 }}
                 title='Sign in'
+                press={HandleSignUp}
                 textStyle={{ color: Colors.BLACK, fontFamily: Font.Bold, fontSize: 25 }}
             />
             <View style={{ width, flexDirection: "row", alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>

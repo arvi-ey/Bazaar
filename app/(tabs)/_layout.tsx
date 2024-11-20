@@ -12,17 +12,21 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/Theme';
 import { Font } from '@/Font';
+import { GetUserOnce } from '@/Redux/Slice/authSlicer';
 
 export default function TabLayout() {
   const theme = useColorScheme();
   const dispatch = useDispatch<AppDispatch>();
+  const { uid } = useSelector((state: RootState) => state.auth)
 
 
   useEffect(() => {
     dispatch(GetBanners());
+    dispatch(GetUserOnce());
     dispatch(GetAllCategory());
   }, [dispatch]);
 
+  console.log("In INdes", uid)
 
   return (
     <Tabs

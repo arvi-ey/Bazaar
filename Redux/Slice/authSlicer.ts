@@ -10,6 +10,12 @@ export interface authState {
     password: string,
 }
 
+export interface AuthState {
+    loading: boolean;
+    user: any | null; // Replace `any` with your actual user object type if known
+    uid: string | null; // Allow uid to be either a string or null
+    error: string | null;
+}
 export interface SignInState {
     email: string,
     password: string,
@@ -62,48 +68,42 @@ export const AppSignIn = createAsyncThunk(
     }
 )
 
-export const CheckAuth = createAsyncThunk(
-    'auth/checkAuth',
-    async () => {
-        const result = await SecureStore.getItemAsync("uid")
-        if (result) return result
-        else return null;
-    }
-)
-
 
 export const GetUserOnce = createAsyncThunk(
     'auth/getuseronce',
-    async (req, res) => {
-        const session = await CheckAuth()
+    async () => {
+        const session = await SecureStore.getItemAsync("uid")
         if (session !== null) {
             try {
-                const response = await axios.get(URL + `user/checkappauth`, {
+                const response = await axios.get(URL + `auth/checkappauth`, {
                     headers: {
                         Authorization: `Bearer ${session}`
                     }
                 });
-                console.log(response)
-                return response.data.data;
+                return response.data.id
             }
             catch (error: any) {
                 return isRejectedWithValue(error.response?.data?.message || "Session  failed");
             }
 
         }
-        else return null
+        else {
+            console.log("user is not logged in")
+            return null
+        }
     }
 )
 
+const initialState: AuthState = {
+    loading: false,
+    user: null,
+    uid: null, // Initially null
+    error: null,
+};
 
 export const authSlice = createSlice({
     name: 'auth',
-    initialState: {
-        loading: false,
-        user: null,
-        uid: null,
-        error: null
-    },
+    initialState,
     reducers: {
 
     },
@@ -130,6 +130,18 @@ export const authSlice = createSlice({
                 state.user = action.payload;
             })
             .addCase(signinUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as any;
+            })
+            .addCase(GetUserOnce.pending, (state, action) => {
+                state.loading = true;
+                state.uid = null
+            })
+            .addCase(GetUserOnce.fulfilled, (state, action: PayloadAction<string | null>) => {
+                state.loading = false;
+                state.uid = action.payload;
+            })
+            .addCase(GetUserOnce.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as any;
             })
