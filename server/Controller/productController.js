@@ -62,14 +62,9 @@ exports.DeleteProduct = async (req, res) => {
 exports.GetAllProduct = async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 6
-    console.log("page", page)
-    console.log("limit", limit)
     const skip = (page - 1) * limit
-
     const sortquery = req.query.sort || "dsc"
     const sortOption = sortquery === "dsc" ? -1 : 1
-
-
     try {
         const Product = await ProductModel.find().sort({ price: sortOption }).skip(skip).limit(limit)
         res.status(200).json({
@@ -125,7 +120,6 @@ exports.GetAllProductByCategory = async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 10
     const skip = (page - 1) * limit
-    console.log(category)
     if (!category) res.status(404).json({ message: "Missing product category" })
     try {
         const Product = await ProductModel.find({ category: category }).skip(skip).limit(limit)

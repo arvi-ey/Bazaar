@@ -22,6 +22,7 @@ interface ProductIDProps {
 }
 const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const { product } = useSelector((state: RootState) => state.singleproduct)
+    const { uid } = useSelector((state: RootState) => state.auth)
     const theme = useColorScheme();
     const dispatch = useDispatch<AppDispatch>()
     const flatListRef = useRef<FlatList>(null);
@@ -30,9 +31,11 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const [SelectSize, stSelectSize] = useState<Size>()
     const snapPoints = useMemo(() => ['25%', '50%', '70%'], []);
     const bottomSheetRef = useRef<BottomSheet>(null);
+
     useEffect(() => {
         dispatch(GetSingleProduct(id))
     }, [dispatch, id])
+
 
     const ProductList = (item: string) => {
         if (!item) {
@@ -44,7 +47,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
             <View style={{ width, height: 500, position: 'relative' }} >
                 <Image source={{ uri: item }} style={{ width: "100%", height: "100%", borderBottomLeftRadius: 40, borderBottomRightRadius: 40, objectFit: "cover" }} />
                 {currentindex === 0 ?
-                    <TouchableOpacity onPress={() => router.back()} style={{ position: 'absolute', left: 20, top: 20, backgroundColor: Colors.MAIN_COLOR, padding: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }} >
+                    <TouchableOpacity onPress={() => router.push({ pathname: "/Allproducts" })} style={{ position: 'absolute', left: 20, top: 20, backgroundColor: Colors.MAIN_COLOR, padding: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }} >
                         <AntDesign name="back" size={24} color={Colors.WHITE} />
                     </TouchableOpacity>
                     :
@@ -128,9 +131,15 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const snapeToIndex = (index: number) => bottomSheetRef.current?.snapToIndex(index);
 
     const AddToCat = () => {
-        router.push({
-            pathname: '/Login'
-        })
+
+        if (uid) {
+            console.log(product)
+        }
+        else {
+            router.push({
+                pathname: '/Login'
+            })
+        }
     }
 
     return (
@@ -193,7 +202,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                 <View style={{ marginTop: 10, width, flexDirection: "row", justifyContent: "space-between" }}>
                     <Text style={{ fontFamily: Font.Medium, color: theme === "dark" ? Colors.WHITE : Colors.BLACK }}>SIZES</Text>
                     <TouchableOpacity onPress={handleOpenPress}>
-                        <Text style={{ fontFamily: Font.Light, marginRight: 50, fontSize: 10, borderBottomWidth: 1, borderColor: theme === "dark" ? Colors.WHITE : Colors.BLACK }}>SIZE CHART</Text>
+                        <Text style={{ fontFamily: Font.Light, marginRight: 50, fontSize: 10, borderBottomWidth: 1, borderColor: theme === "dark" ? Colors.WHITE : Colors.BLACK, color: theme === "dark" ? Colors.WHITE : Colors.BLACK }}>SIZE CHART</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "row", marginTop: 5 }}>

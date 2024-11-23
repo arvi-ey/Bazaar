@@ -1,4 +1,4 @@
-import { ActivityIndicator, Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/Theme';
@@ -17,6 +17,8 @@ import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView, } from 'react-native-gesture-handler';
 import Button from './Components/Button';
 import { AppSignIn } from '@/Redux/Slice/authSlicer';
+import { GetUserOnce } from '@/Redux/Slice/authSlicer';
+import { GetUserInfo } from '@/Redux/Slice/userSlicer';
 
 export interface signInData {
     email: string;
@@ -25,9 +27,10 @@ export interface signInData {
 const Login = () => {
     const [data, setData] = useState<signInData>({ email: "", password: "" })
     const dispatch = useDispatch<AppDispatch>();
-    const { user } = useSelector((state: RootState) => state.auth)
+    const { user, loading, error } = useSelector((state: RootState) => state.auth)
     const theme = useColorScheme();
-    const [hidepasword, setHidePassword] = useState<boolean>(false)
+    const [hidepasword, setHidePassword] = useState<boolean>(true)
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const Dark = theme === "dark" ? true : false
     const InputBG = Dark ? "#393C41" : "#F3F3F6"
     const InPutHeight = 60
@@ -40,9 +43,21 @@ const Login = () => {
     const google = require("../assets/images/google.png")
     const facebook = require("../assets/images/facebook.png")
 
-    const HandleSignUp = () => {
-        dispatch(AppSignIn(data))
+    const HandleSignUp = async () => {
+        setErrorMessage(null)
+        const result = await dispatch(AppSignIn(data))
+        if (result?.payload?.user === false) {
+            setErrorMessage(result.payload.message)
+            return
+        }
+        if (result.payload._id) {
+            await dispatch(GetUserInfo(result.payload._id));
+            router.push({
+                pathname: '/Allproducts',
+            })
+        }
     }
+
     return (
         <View style={{ flex: 1, backgroundColor: Dark ? Colors.BLACK : Colors.WHITE, alignItems: 'center', paddingTop: 20 }} >
             <TouchableOpacity style={{ width }} onPress={() => router.back()} >
@@ -62,7 +77,7 @@ const Login = () => {
                     onChangeText={(text) => setData({ ...data, email: text })}
                 />
             </View>
-            <View style={{ marginTop: 30, width: width - 20, backgroundColor: InputBG, borderRadius: 8, height: InPutHeight, flexDirection: "row", alignItems: 'center' }}>
+            <View style={{ position: 'relative', marginTop: 30, width: width - 20, backgroundColor: InputBG, borderRadius: 8, height: InPutHeight, flexDirection: "row", alignItems: 'center' }}>
                 <Ionicons name="lock-closed-outline" size={28} color={IconColor} style={{ opacity: 0.8, marginHorizontal: 10 }} />
                 <TextInput
                     style={{ height: "100%", color: InputColor, fontFamily: InputFont, width: "75%", alignItems: 'center', fontSize: InputFontSize }}
@@ -75,18 +90,30 @@ const Login = () => {
                 <TouchableOpacity onPress={() => setHidePassword(!hidepasword)} style={{ height: "100%", justifyContent: 'center' }} >
                     <Ionicons name={hidepasword ? "eye-off-outline" : "eye-outline"} size={24} color={IconColor} style={{ opacity: 0.8, marginHorizontal: 5 }} />
                 </TouchableOpacity>
+                {errorMessage ?
+                    <View style={{ width: "100%", position: "absolute", bottom: -20 }}>
+                        <Text style={{ color: Colors.EROR_TEXT, fontFamily: Font.Light, paddingLeft: 20 }}>{errorMessage}</Text>
+                    </View> : null
+                }
             </View>
             <View style={{ width: width - 30, flexDirection: 'row', justifyContent: "flex-end", marginTop: 10 }} >
                 <TouchableOpacity>
                     <Text style={{ color: Colors.MAIN_COLOR, fontFamily: Font.Regular }}>Forgot passsword?</Text>
                 </TouchableOpacity>
             </View>
-            <Button
-                buttonStyle={{ marginTop: 10, borderRadius: 7, width: width - 40, backgroundColor: Colors.MAIN_COLOR, alignItems: "center", justifyContent: "center", height: 50 }}
-                title='Sign in'
-                press={HandleSignUp}
-                textStyle={{ color: Colors.BLACK, fontFamily: Font.Bold, fontSize: 25 }}
-            />
+            {
+                loading ?
+                    <View style={{ width: width - 40, alignItems: "center", justifyContent: "center", height: 50 }}>
+                        <ActivityIndicator size='large' color={Colors.MAIN_COLOR} />
+                    </View>
+                    :
+                    <Button
+                        buttonStyle={{ marginTop: 10, borderRadius: 7, width: width - 40, backgroundColor: Colors.MAIN_COLOR, alignItems: "center", justifyContent: "center", height: 50 }}
+                        title='Sign in'
+                        press={HandleSignUp}
+                        textStyle={{ color: Colors.BLACK, fontFamily: Font.Bold, fontSize: 25 }}
+                    />
+            }
             <View style={{ width, flexDirection: "row", alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
                 <View style={{ width: "35%", height: 1, opacity: 0.2, backgroundColor: LineBg }} />
                 <Text style={{ fontFamily: Font.Regular, color: InputColor, marginHorizontal: 5, opacity: 0.5 }}>Or signin with</Text>

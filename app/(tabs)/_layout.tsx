@@ -13,11 +13,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/Theme';
 import { Font } from '@/Font';
 import { GetUserOnce } from '@/Redux/Slice/authSlicer';
+import { GetUserInfo } from '@/Redux/Slice/userSlicer';
 
 export default function TabLayout() {
   const theme = useColorScheme();
   const dispatch = useDispatch<AppDispatch>();
   const { uid } = useSelector((state: RootState) => state.auth)
+  const { user } = useSelector((state: RootState) => state.user)
 
 
   useEffect(() => {
@@ -26,8 +28,12 @@ export default function TabLayout() {
     dispatch(GetAllCategory());
   }, [dispatch]);
 
-  console.log("In INdes", uid)
+  useEffect(() => {
+    if (uid)
+      dispatch(GetUserInfo(uid));
+  }, [uid])
 
+  // console.log(user)
   return (
     <Tabs
       screenOptions={{

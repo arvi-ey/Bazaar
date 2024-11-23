@@ -30,7 +30,7 @@ export const signupUser = createAsyncThunk(
                 return response.data.data;
             }
         } catch (error: any) {
-            return isRejectedWithValue(error.response?.data?.message || "Sign up failed");
+            return error.response?.data
         }
     }
 );
@@ -60,10 +60,9 @@ export const AppSignIn = createAsyncThunk(
                 await SecureStore.setItemAsync("uid", response.data.session)
                 return response.data.user
             }
-            return isRejectedWithValue("Sign in failed");
+            return "Sign in failed"
         } catch (error: any) {
-            // console.log(error)
-            return isRejectedWithValue(error.response?.data?.message || "Sign in failed");
+            return error.response?.data
         }
     }
 )
@@ -144,6 +143,17 @@ export const authSlice = createSlice({
             .addCase(GetUserOnce.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as any;
+            })
+            .addCase(AppSignIn.pending, (state, action) => {
+                state.loading = true
+            })
+            .addCase(AppSignIn.fulfilled, (state, action) => {
+                state.loading = false
+                state.uid = action.payload._id
+            })
+            .addCase(AppSignIn.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload as any
             })
     },
 })

@@ -15,7 +15,10 @@ exports.UserSignIn = async (req, res) => {
             })
             else {
                 const checkPassword = await bcrypt.compare(password, user.password)
-                if (checkPassword === false) return res.status(401).json({ message: "Wrong Password", user: false })
+                if (checkPassword === false) {
+                    console.log(checkPassword)
+                    res.status(401).json({ message: "Wrong email or password", user: false })
+                }
                 else {
                     const sessionData = jwt.sign({ id: user._id, role: user.userType }, process.env.JWT_SECRET,);
                     res.cookie('token', sessionData, {
@@ -47,10 +50,10 @@ exports.UserSignUp = async (req, res) => {
     if (!name || !email || !phone_number || !password) res.status(404).json({ message: "Missing Data" })
     else {
         const emailExist = await UserModel.findOne({ email })
-        if (emailExist) res.status(409).json({ message: "Email already exists" })
+        if (emailExist) res.status(409).json({ message: "Email already exists", error: "email", user: false })
         else {
             const numberExist = await UserModel.findOne({ phone_number })
-            if (numberExist) res.status(409).json({ message: "Phone number already exists" })
+            if (numberExist) res.status(409).json({ message: "Phone number already exists", error: "phone", user: false })
             else {
                 try {
                     const salt = await bcrypt.genSalt(10)

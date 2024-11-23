@@ -5,6 +5,7 @@ export const Colors = {
     BLACK: "#000000",
     INPUT_BACKGROUND: "#EAEAEA",
     INPUT_BACKGROUND_DARK: "#282C34",
-    RATING: "#D2042D"
+    RATING: "#D2042D",
+    EROR_TEXT: "#FF0800"
 
 }

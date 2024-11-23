@@ -16,7 +16,9 @@ import { useNavigation } from 'expo-router';
 const ProductBox = () => {
     const { products, hasMore, currentPage, loading } = useSelector((state: RootState) => state.product)
     const theme = useColorScheme();
+    const { uid } = useSelector((state: RootState) => state.auth)
     const dispatch = useDispatch<AppDispatch>();
+    const { user } = useSelector((state: RootState) => state.user)
     const [page, setPage] = useState<number>(0)
     const navigation = useNavigation();
 
@@ -28,7 +30,6 @@ const ProductBox = () => {
             await dispatch(GetProducts({ page, limit: 6, dsc: 'dsc' }))
         }
     }
-
     const ListEnd = () => {
         setPage(page + 1)
     }
@@ -40,7 +41,6 @@ const ProductBox = () => {
     }
 
     const renderData = ({ item }: any) => {
-        // console.log(item)
         return (
             <TouchableOpacity
                 onPress={() => GoToProductdetails(item._id, item.category)}
@@ -101,7 +101,7 @@ const ProductBox = () => {
     }
     const renderFooter = () => {
         return (
-            <View style={{ marginBottom: 40 }}>
+            <View style={{ marginBottom: 50 }}>
                 {loading ?
                     <ActivityIndicator size="large" color={Colors.MAIN_COLOR} />
                     :
