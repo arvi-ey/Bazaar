@@ -27,7 +27,7 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
     }, [data]);
     const renderItem: FlatListProps<Banner>['renderItem'] = ({ item }) => (
         <View style={{ width, alignItems: 'center', }}>
-            <Image source={{ uri: item.image }} style={{ width: width - 20, borderRadius: 12, height: 450 }} resizeMode="stretch" />
+            <Image source={{ uri: item.image }} style={{ width: width - 20, borderRadius: 12, height: 450 }} resizeMode="cover" />
         </View>
     );
 

@@ -6,4 +6,5 @@ export const Font = {
     SemiBold: "OutfitSemiBold",
     Thin: "OutfitThin",
     ExtraBold: "OutfitExtraBold",
+    LOGO: "PermanentMarkerRegular"
 }

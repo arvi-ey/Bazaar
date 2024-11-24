@@ -18,6 +18,7 @@ import { GestureHandlerRootView, } from 'react-native-gesture-handler';
 import Button from './Components/Button';
 import { AppSignIn } from '@/Redux/Slice/authSlicer';
 import { GetUserOnce } from '@/Redux/Slice/authSlicer';
+import { useLocalSearchParams, } from 'expo-router';;
 import { GetUserInfo } from '@/Redux/Slice/userSlicer';
 
 export interface signInData {
@@ -43,6 +44,7 @@ const Login = () => {
     const google = require("../assets/images/google.png")
     const facebook = require("../assets/images/facebook.png")
 
+    const { from } = useLocalSearchParams();
     const HandleSignUp = async () => {
         setErrorMessage(null)
         const result = await dispatch(AppSignIn(data))
@@ -52,11 +54,29 @@ const Login = () => {
         }
         if (result.payload._id) {
             await dispatch(GetUserInfo(result.payload._id));
+            if (from === "home") {
+                router.push({
+                    pathname: '/(tabs)',
+                })
+            }
+            else {
+                router.push({
+                    pathname: '/Allproducts',
+                })
+            }
+        }
+    }
+
+
+    const HandleCheck = () => {
+        if (from === "home") {
+            console.log("this")
             router.push({
-                pathname: '/Allproducts',
+                pathname: '/(tabs)',
             })
         }
     }
+
 
     return (
         <View style={{ flex: 1, backgroundColor: Dark ? Colors.BLACK : Colors.WHITE, alignItems: 'center', paddingTop: 20 }} >

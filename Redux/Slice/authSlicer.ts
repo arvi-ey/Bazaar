@@ -57,7 +57,8 @@ export const AppSignIn = createAsyncThunk(
         try {
             const response = await axios.post(URL + `auth/signin`, userData, { withCredentials: true });
             if (response.data.authenticate === true && response.data.user && response.data.session) {
-                await SecureStore.setItemAsync("uid", response.data.session)
+                await SecureStore.setItemAsync("session", response.data.session)
+                await SecureStore.setItemAsync("uid", response.data.user._id)
                 return response.data.user
             }
             return "Sign in failed"
@@ -71,7 +72,7 @@ export const AppSignIn = createAsyncThunk(
 export const GetUserOnce = createAsyncThunk(
     'auth/getuseronce',
     async () => {
-        const session = await SecureStore.getItemAsync("uid")
+        const session = await SecureStore.getItemAsync("session")
         if (session !== null) {
             try {
                 const response = await axios.get(URL + `auth/checkappauth`, {
@@ -79,7 +80,8 @@ export const GetUserOnce = createAsyncThunk(
                         Authorization: `Bearer ${session}`
                     }
                 });
-                return response.data.id
+                // return response.data.id
+                await SecureStore.setItemAsync("uid", response.data.id)
             }
             catch (error: any) {
                 return isRejectedWithValue(error.response?.data?.message || "Session  failed");
@@ -88,6 +90,19 @@ export const GetUserOnce = createAsyncThunk(
         }
         else {
             console.log("user is not logged in")
+            return null
+        }
+    }
+)
+
+export const CheckAuth = createAsyncThunk(
+    "auth/checkauh",
+    async () => {
+        const uid = await SecureStore.getItemAsync("uid")
+        if (uid !== null) {
+            return uid
+        }
+        else {
             return null
         }
     }
@@ -136,10 +151,10 @@ export const authSlice = createSlice({
                 state.loading = true;
                 state.uid = null
             })
-            .addCase(GetUserOnce.fulfilled, (state, action: PayloadAction<string | null>) => {
-                state.loading = false;
-                state.uid = action.payload;
-            })
+            // .addCase(GetUserOnce.fulfilled, (state, action: PayloadAction<string | null>) => {
+            //     state.loading = false;
+            //     state.uid = action.payload;
+            // })
             .addCase(GetUserOnce.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as any;
@@ -154,6 +169,9 @@ export const authSlice = createSlice({
             .addCase(AppSignIn.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.payload as any
+            })
+            .addCase(CheckAuth.fulfilled, (state, action) => {
+                state.uid = action.payload
             })
     },
 })

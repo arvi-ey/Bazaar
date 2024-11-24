@@ -23,7 +23,7 @@ export default function HomeScreen() {
 
   return (
     <ScrollView style={{ backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE }}>
-      <SafeAreaView style={[styles.MainView, { backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE }]} >
+      <View style={[styles.MainView, { backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE }]} >
         <View style={{ width: width, alignItems: "center" }}>
           <TextInput
             value={searchProduct.toString()}
@@ -56,7 +56,7 @@ export default function HomeScreen() {
             press={() => router.push("/Allproducts")}
           />
         </View>
-      </SafeAreaView>
+      </View>
     </ScrollView >
   );
 }
@@ -64,7 +64,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   MainView: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? 45 : 0,
+    marginTop: 10
   },
   ButtonStyle: {
     backgroundColor: Colors.MAIN_COLOR,

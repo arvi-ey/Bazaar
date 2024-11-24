@@ -73,13 +73,13 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const getDateAfterDays = (days: number | null | undefined) => {
         if (!days) return
         const today = new Date();
-        today.setDate(today.getDate() + days); // Add the specified number of days
+        today.setDate(today.getDate() + days);
         const options: Intl.DateTimeFormatOptions = {
             weekday: 'short',
             month: 'short',
             day: 'numeric'
         };
-        return today.toLocaleDateString('en-US', options); // Return the formatted date without the year
+        return today.toLocaleDateString('en-US', options);
     }
 
     interface Size {

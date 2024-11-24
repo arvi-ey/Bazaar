@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Colors } from '@/Theme';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Font } from '@/Font';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import Rating from './Rating';
 const { height, width } = Dimensions.get("window")
 import { useSelector } from 'react-redux';
@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '@/Redux/Store';
 import { GetAllProducts, GetProducts } from '@/Redux/Slice/productsSlicer';
 import { Router, router } from 'expo-router';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { useNavigation } from 'expo-router';
 
 const ProductBox = () => {
@@ -39,6 +40,9 @@ const ProductBox = () => {
             params: { id, category },
         })
     }
+
+
+
 
     const renderData = ({ item }: any) => {
         return (
@@ -79,6 +83,7 @@ const ProductBox = () => {
             setSearchProduct("")
         }
 
+
         return (
             <View style={{ width: width - 20, marginBottom: 10, borderRadius: 12, alignItems: "center", gap: 10, flexDirection: "row", backgroundColor: theme === "dark" ? Colors.INPUT_BACKGROUND_DARK : Colors.INPUT_BACKGROUND, }}>
                 <TextInput
@@ -112,9 +117,13 @@ const ProductBox = () => {
             </View>
         );
     };
-
     return (
         <View style={{ width, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ width: width - 20, marginTop: 10 }}>
+                <TouchableOpacity style={{ width: 50, height: 30, }} onPress={() => router.push("/(tabs)")}>
+                    <AntDesign name="arrowleft" size={30} color={theme === "dark" ? Colors.WHITE : Colors.BLACK} />
+                </TouchableOpacity>
+            </View>
             <FlatList
                 contentContainerStyle={{ width, marginTop: 10, justifyContent: 'center', alignItems: 'center' }}
                 ListHeaderComponent={SearchBox}
@@ -127,7 +136,7 @@ const ProductBox = () => {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={(item) => renderData(item)}
             />
-        </View>
+        </View >
     )
 }
 

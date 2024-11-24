@@ -9,6 +9,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { store } from '@/Redux/Store';
 import { Font } from '@/Font';
 import { Colors } from '@/Theme';
+import { StatusBar } from 'react-native';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -26,6 +27,8 @@ export default function RootLayout() {
     OutfitThin: require('../assets/fonts/Outfit-Thin.ttf'),
     OutfitRegular: require('../assets/fonts/Outfit-Regular.ttf'),
     OutfitMedium: require('../assets/fonts/Outfit-Medium.ttf'),
+    PermanentMarkerRegular: require('../assets/fonts/PermanentMarker-Regular.ttf'),
+
   });
 
   useEffect(() => {
@@ -47,21 +50,28 @@ export default function RootLayout() {
       fontSize: 20,
       color: colorScheme === 'dark' ? Colors.WHITE : Colors.BLACK,
     },
-    headerTintColor: colorScheme === 'dark' ? Colors.WHITE : Colors.BLACK, // Color for back buttons and icons
+    headerTintColor: colorScheme === 'dark' ? Colors.WHITE : Colors.BLACK,
   };
 
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <StatusBar
+        barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
+        backgroundColor={colorScheme === 'dark' ? Colors.BLACK : Colors.WHITE}
+      />
       <Provider store={store}>
         <Stack
           screenOptions={globalHeaderStyles}
         >
+          {/* <Stack.Screen name="index" options={{ headerShown: false }} /> */}
+          <Stack.Screen name="Onboarding" options={{ headerShown: false, }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false, }} />
-          <Stack.Screen name="Allproducts" />
+          <Stack.Screen name="Allproducts" options={{ headerShown: false, }} />
           <Stack.Screen name="Product" options={{ headerShown: false, }} />
           <Stack.Screen name="Login" options={{ headerShown: false, }} />
           <Stack.Screen name="Signup" options={{ headerShown: false, }} />
+          <Stack.Screen name="Account" />
           <Stack.Screen name="+not-found" />
         </Stack>
       </Provider>
