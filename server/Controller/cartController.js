@@ -1,8 +1,8 @@
 const CartModel = require("../Model/cartModel")
 
 exports.AddToCart = async (req, res) => {
-    const { title, description, price, category, stock, image, userId } = req.body
-    if (!title || !description || !price || !category || !stock || !image || !userId) {
+    const { title, description, price, category, stock, image, userId, size } = req.body
+    if (!title || !description || !price || !category || !stock || !image || !userId || !size) {
         return res.status(404).json({
             message: "Missing Data"
         })

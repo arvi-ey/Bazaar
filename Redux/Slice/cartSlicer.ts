@@ -14,6 +14,7 @@ export interface cartData {
     ratings?: number;
     numReviews?: number;
     title: string;
+    size?: string;
     createdAt?: string;
     deliveryTime?: number;
 }

@@ -1,6 +1,6 @@
 export const Colors = {
-    MAIN_COLOR: "#8cdb04",
-    SECONDARY_COLOR: "#a9eb3b",
+    MAIN_COLOR: "#67f577",
+    SECONDARY_COLOR: "#67f577",
     WHITE: "#FFFFFF",
     BLACK: "#000000",
     INPUT_BACKGROUND: "#EAEAEA",

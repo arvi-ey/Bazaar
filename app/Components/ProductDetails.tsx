@@ -32,9 +32,11 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const Text_color = theme === "dark" ? Colors.WHITE : Colors.BLACK
     const [currentindex, setCurrentIndex] = useState<number>(0)
     const [SelectSize, stSelectSize] = useState<Size>()
-    const snapPoints = useMemo(() => ['25%', '50%', '70%'], []);
-    const bottomSheetRef = useRef<BottomSheet>(null);
+    const [errorText, setErrortext] = useState<string>()
 
+    const delivery = require("../../assets/images/deliverytruck.png")
+    const returnimage = require("../../assets/images/return.png")
+    const cash = require("../../assets/images/cashdelivery.png")
 
     useEffect(() => {
         dispatch(GetSingleProduct(id))
@@ -65,7 +67,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                 <Image source={{ uri: item }} style={{ width: "100%", height: "100%", borderBottomLeftRadius: 40, borderBottomRightRadius: 40, objectFit: "cover" }} />
                 {currentindex === 0 ?
                     <TouchableOpacity onPress={() => router.push({ pathname: "/Allproducts" })} style={{ position: 'absolute', left: 20, top: 20, backgroundColor: Colors.MAIN_COLOR, padding: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }} >
-                        <AntDesign name="back" size={24} color={Colors.WHITE} />
+                        <AntDesign name="back" size={24} color={Colors.BLACK} />
                     </TouchableOpacity>
                     :
                     null
@@ -105,12 +107,12 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     }
     const Size = [
         {
-            name: "Extra small",
-            symbol: "XS"
-        },
-        {
             name: "Small",
             symbol: "S"
+        },
+        {
+            name: "Medium",
+            symbol: "M"
         },
         {
             name: "Large",
@@ -122,7 +124,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
         },
         {
             name: "Extra Extra Large",
-            symbol: "2XL"
+            symbol: "XXL"
         },
 
     ]
@@ -144,9 +146,19 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     );
 
     const AddToCat = async () => {
+        if (!SelectSize) {
+            setErrortext("Please select size")
+            return
+        }
+        if (productadded) {
+            router.push({
+                pathname: "/(tabs)/Cart"
+            })
+        }
         if (uid) {
             const cartdata: cartData = {
                 userId: uid,
+                size: SelectSize?.symbol || "",
                 product_id: product?._id || "",
                 description: product?.description || '',
                 price: product?.price || 0,
@@ -208,7 +220,9 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                         <Text style={{ color: Text_color, fontFamily: Font.Bold, fontSize: 12, opacity: 0.5, }} >₹{product?.price}</Text>
                         <View style={{ height: 1, width: 35, backgroundColor: Text_color, position: "absolute", top: "40%", opacity: 0.3 }} />
                     </View>
-                    <Text style={{ color: Colors.MAIN_COLOR, fontFamily: Font.Bold, fontSize: 15 }}>40% OFF</Text>
+                    <View style={{ backgroundColor: Colors.MAIN_COLOR, paddingHorizontal: 5, borderRadius: 7 }}>
+                        <Text style={{ color: Colors.BLACK, fontFamily: Font.Bold, fontSize: 15 }}>40% OFF</Text>
+                    </View>
                 </View>
                 <Rating
                     maxRatingCount={5}
@@ -218,29 +232,31 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                     size={13}
                 />
                 <Text style={{ color: Text_color, fontFamily: Font.Light, fontSize: 10 }} >{product?.description}</Text>
-                <View style={{ flexDirection: "row", alignItems: "center" }} >
-                    <View style={{ width: 30 }}>
-                        <MaterialCommunityIcons name="car-limousine" size={30} color={Colors.MAIN_COLOR} />
+                <View style={{ gap: 5 }} >
+                    <View style={{ flexDirection: "row", alignItems: "center" }} >
+                        <View style={{ width: 30 }}>
+                            <Image source={delivery} style={{ height: 30, width: 30 }} />
+                        </View>
+                        <Text style={{ color: Text_color, fontFamily: Font.Medium, fontSize: 13, marginLeft: 10 }} >Delivery by {getDateAfterDays(product?.deliveryTime)}</Text>
                     </View>
-                    <Text style={{ color: Text_color, fontFamily: Font.Medium, fontSize: 13, marginLeft: 10 }} >Delivery by{getDateAfterDays(product?.deliveryTime)}</Text>
-                </View>
-                <View style={{ flexDirection: "row", alignItems: "center", }} >
-                    <View style={{ width: 30 }}>
-                        <Fontisto name="arrow-return-left" size={25} color={Colors.MAIN_COLOR} />
+                    <View style={{ flexDirection: "row", alignItems: "center", }} >
+                        <View style={{ width: 30 }}>
+                            <Image source={returnimage} style={{ height: 30, width: 30 }} />
+                        </View>
+                        <Text style={{ color: Text_color, fontFamily: Font.Medium, fontSize: 13, marginLeft: 10 }} >10 days return policy</Text>
                     </View>
-                    <Text style={{ color: Text_color, fontFamily: Font.Medium, fontSize: 13, marginLeft: 10 }} >10 days return policy</Text>
-                </View>
-                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 2 }} >
-                    <View style={{ width: 30 }}>
-                        <MaterialIcons name="payment" size={30} color={Colors.MAIN_COLOR} />
+                    <View style={{ flexDirection: "row", alignItems: "center", marginTop: 2 }} >
+                        <View style={{ width: 30 }}>
+                            <Image source={cash} style={{ height: 30, width: 30 }} />
+                        </View>
+                        <Text style={{ color: Text_color, fontFamily: Font.Medium, fontSize: 13, marginLeft: 10 }} >Pay on delivery available</Text>
                     </View>
-                    <Text style={{ color: Text_color, fontFamily: Font.Medium, fontSize: 13, marginLeft: 10 }} >Pay on delivery available</Text>
-                </View>
-                <View style={{ marginTop: 10, width, flexDirection: "row", justifyContent: "space-between" }}>
-                    <Text style={{ fontFamily: Font.Medium, color: theme === "dark" ? Colors.WHITE : Colors.BLACK }}>SIZES</Text>
-                    <TouchableOpacity >
-                        <Text style={{ fontFamily: Font.Light, marginRight: 50, fontSize: 10, borderBottomWidth: 1, borderColor: theme === "dark" ? Colors.WHITE : Colors.BLACK, color: theme === "dark" ? Colors.WHITE : Colors.BLACK }}>SIZE CHART</Text>
-                    </TouchableOpacity>
+                    <View style={{ marginTop: 10, width, flexDirection: "row", justifyContent: "space-between" }}>
+                        <Text style={{ fontFamily: Font.Medium, color: theme === "dark" ? Colors.WHITE : Colors.BLACK }}>SIZES</Text>
+                        <TouchableOpacity >
+                            <Text style={{ fontFamily: Font.Light, marginRight: 50, fontSize: 10, borderBottomWidth: 1, borderColor: theme === "dark" ? Colors.WHITE : Colors.BLACK, color: theme === "dark" ? Colors.WHITE : Colors.BLACK }}>SIZE CHART</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={{ flexDirection: "row", marginTop: 5 }}>
                     {
@@ -257,12 +273,16 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                         })
                     }
                 </View>
+                {errorText ?
+                    <Text style={{ color: Colors.MAIN_COLOR, fontFamily: Font.Medium }}>{errorText}</Text> :
+                    null
+                }
                 <Button
-                    title={productadded ? "Already added to cart" : "Add to cart"}
+                    title={productadded ? "View cart" : "Add to cart"}
                     activeOpacity={0.8}
                     press={AddToCat}
                     textStyle={styles.ButtonText}
-                    buttonStyle={styles.ButtonStyle}
+                    buttonStyle={[styles.ButtonStyle, { backgroundColor: Colors.SECONDARY_COLOR }]}
                 />
             </View>
         </View >

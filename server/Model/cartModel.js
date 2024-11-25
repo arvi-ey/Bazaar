@@ -51,6 +51,11 @@ const cartSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    size: {
+        type: String,
+        required: true,
+        enum: ['S', 'M', 'L', 'XL', 'XXL'],
+    },
     deliveryTime: {
         type: Number,
         required: true,

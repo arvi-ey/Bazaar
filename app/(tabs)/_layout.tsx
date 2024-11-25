@@ -104,7 +104,9 @@ export default function TabLayout() {
               <Ionicons name={focused ? "bag" : "bag-outline"} size={24} color={focused ? Colors.MAIN_COLOR : (theme === "dark" && !focused) ? Colors.WHITE : Colors.BLACK} />
               <Text style={{ color: focused ? Colors.MAIN_COLOR : (theme === "dark" && !focused) ? Colors.WHITE : Colors.BLACK, fontFamily: Font.Medium }}>Cart</Text>
               {cartitems && cartitems.length > 0 ?
-                <Text style={{ color: Colors.EROR_TEXT, position: "absolute", right: 5, top: -5 }}>{cartitems?.length}</Text>
+                <View style={{ position: "absolute", backgroundColor: Colors.MAIN_COLOR, height: 20, width: 20, justifyContent: 'center', alignItems: "center", borderRadius: 20, right: 5, top: -5, }}>
+                  <Text style={{ color: Colors.BLACK, fontFamily: Font.Bold }}>{cartitems?.length}</Text>
+                </View>
                 :
                 null
               }
