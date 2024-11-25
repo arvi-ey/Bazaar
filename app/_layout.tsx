@@ -64,7 +64,6 @@ export default function RootLayout() {
         <Stack
           screenOptions={globalHeaderStyles}
         >
-          {/* <Stack.Screen name="index" options={{ headerShown: false }} /> */}
           <Stack.Screen name="Onboarding" options={{ headerShown: false, }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false, }} />
           <Stack.Screen name="Allproducts" options={{ headerShown: false, }} />

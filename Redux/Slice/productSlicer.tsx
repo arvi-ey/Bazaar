@@ -48,6 +48,7 @@ export const singleProductSlice = createSlice({
             .addCase(GetSingleProduct.pending, (state) => {
                 state.loading = true;
                 state.error = null;
+                state.product = null;
             })
             .addCase(GetSingleProduct.fulfilled, (state, action) => {
                 state.loading = false;

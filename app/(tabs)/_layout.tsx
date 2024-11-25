@@ -15,11 +15,13 @@ import { Font } from '@/Font';
 import { GetUserOnce, CheckAuth } from '@/Redux/Slice/authSlicer';
 import { GetUserInfo } from '@/Redux/Slice/userSlicer';
 import Button from '../Components/Button';
+import { GetCartItems } from '@/Redux/Slice/cartSlicer';
 export default function TabLayout() {
   const theme = useColorScheme();
   const dispatch = useDispatch<AppDispatch>();
   const { uid } = useSelector((state: RootState) => state.auth)
   const { user } = useSelector((state: RootState) => state.user)
+  const { cartitems } = useSelector((state: RootState) => state.cart)
 
 
   useEffect(() => {
@@ -29,8 +31,10 @@ export default function TabLayout() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (uid)
+    if (uid) {
       dispatch(GetUserInfo(uid));
+      dispatch(GetCartItems(uid))
+    }
   }, [uid])
 
   const Logo = require("../../assets/images/App_logo.png")
@@ -96,9 +100,14 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon: ({ color, focused }) => (
-            <View style={{ marginTop: 11, width: 60, justifyContent: 'center', alignItems: "center" }}>
+            <View style={{ marginTop: 11, width: 60, justifyContent: 'center', position: "relative", alignItems: "center" }}>
               <Ionicons name={focused ? "bag" : "bag-outline"} size={24} color={focused ? Colors.MAIN_COLOR : (theme === "dark" && !focused) ? Colors.WHITE : Colors.BLACK} />
               <Text style={{ color: focused ? Colors.MAIN_COLOR : (theme === "dark" && !focused) ? Colors.WHITE : Colors.BLACK, fontFamily: Font.Medium }}>Cart</Text>
+              {cartitems && cartitems.length > 0 ?
+                <Text style={{ color: Colors.EROR_TEXT, position: "absolute", right: 5, top: -5 }}>{cartitems?.length}</Text>
+                :
+                null
+              }
             </View>
           ),
         }}

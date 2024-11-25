@@ -16,6 +16,7 @@ import { Router, router } from 'expo-router';
 import Button from './Button';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AddToCart, cartData } from '@/Redux/Slice/cartSlicer';
 
 interface ProductIDProps {
     id: string;
@@ -23,6 +24,8 @@ interface ProductIDProps {
 const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const { product } = useSelector((state: RootState) => state.singleproduct)
     const { uid } = useSelector((state: RootState) => state.auth)
+    const { cartitems } = useSelector((state: RootState) => state.cart)
+    const [productadded, setProductAdded] = useState<boolean>(false)
     const theme = useColorScheme();
     const dispatch = useDispatch<AppDispatch>()
     const flatListRef = useRef<FlatList>(null);
@@ -32,9 +35,23 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const snapPoints = useMemo(() => ['25%', '50%', '70%'], []);
     const bottomSheetRef = useRef<BottomSheet>(null);
 
+
     useEffect(() => {
         dispatch(GetSingleProduct(id))
     }, [dispatch, id])
+
+    useEffect(() => {
+        if (cartitems && cartitems.length > 0 && product) {
+            const data = cartitems.find(cartitems => cartitems.product_id === product._id)
+            if (data) {
+                setProductAdded(true)
+            } else {
+                setProductAdded(false)
+            }
+        }
+    }, [cartitems, product])
+
+
 
 
     const ProductList = (item: string) => {
@@ -125,15 +142,27 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
         (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />,
         []
     );
-    const handleClosePress = () => bottomSheetRef.current?.close();
-    const handleOpenPress = () => bottomSheetRef.current?.expand();
-    const handleCollapsePress = () => bottomSheetRef.current?.collapse();
-    const snapeToIndex = (index: number) => bottomSheetRef.current?.snapToIndex(index);
 
-    const AddToCat = () => {
-
+    const AddToCat = async () => {
         if (uid) {
-            console.log(product)
+            const cartdata: cartData = {
+                userId: uid,
+                product_id: product?._id || "",
+                description: product?.description || '',
+                price: product?.price || 0,
+                category: product?.category || '',
+                stock: product?.stock || 0,
+                image: product?.images?.[0] || '',
+                ratings: product?.ratings || 0,
+                numReviews: product?.numReviews || 0,
+                title: product?.title || '',
+                createdAt: Date.now().toString(),
+                deliveryTime: product?.deliveryTime || 0,
+            }
+            const result = await dispatch(AddToCart(cartdata))
+            if (result.payload._id) {
+                setProductAdded(true)
+            }
         }
         else {
             router.push({
@@ -142,8 +171,16 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
         }
     }
 
+    if (!product) {
+        return (
+            <View style={{ flex: 1, height, justifyContent: "center", alignItems: "center" }} >
+                <ActivityIndicator size={24} color={Colors.MAIN_COLOR} />
+            </View>
+        )
+    }
+
     return (
-        <GestureHandlerRootView style={{ flex: 1, width, alignItems: 'center', backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE, marginBottom: 20 }} >
+        <View style={{ flex: 1, width, alignItems: 'center', backgroundColor: theme === "dark" ? Colors.BLACK : Colors.WHITE, marginBottom: 20 }} >
             <FlatList
                 ref={flatListRef}
                 data={product?.images}
@@ -201,7 +238,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                 </View>
                 <View style={{ marginTop: 10, width, flexDirection: "row", justifyContent: "space-between" }}>
                     <Text style={{ fontFamily: Font.Medium, color: theme === "dark" ? Colors.WHITE : Colors.BLACK }}>SIZES</Text>
-                    <TouchableOpacity onPress={handleOpenPress}>
+                    <TouchableOpacity >
                         <Text style={{ fontFamily: Font.Light, marginRight: 50, fontSize: 10, borderBottomWidth: 1, borderColor: theme === "dark" ? Colors.WHITE : Colors.BLACK, color: theme === "dark" ? Colors.WHITE : Colors.BLACK }}>SIZE CHART</Text>
                     </TouchableOpacity>
                 </View>
@@ -221,43 +258,14 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                     }
                 </View>
                 <Button
-                    title='Add to Bag'
+                    title={productadded ? "Already added to cart" : "Add to cart"}
                     activeOpacity={0.8}
                     press={AddToCat}
                     textStyle={styles.ButtonText}
                     buttonStyle={styles.ButtonStyle}
                 />
             </View>
-            <BottomSheet
-                ref={bottomSheetRef}
-                index={-1}
-                snapPoints={snapPoints}
-                enablePanDownToClose={true}
-                handleIndicatorStyle={{ backgroundColor: '#fff' }}
-                backgroundStyle={{ backgroundColor: '#1d0f4e' }}
-                backdropComponent={renderBackdrop}
-            >
-                <View>
-                    <View style={{ marginLeft: 15, flexDirection: "row" }}>
-                        <Text style={{ fontFamily: Font.Bold, fontSize: 20 }} >Select Profile Photo</Text>
-                    </View>
-                    <View>
-                        <TouchableOpacity activeOpacity={0.8} style={{ justifyContent: 'center', alignItems: 'center' }}  >
-                            {/* <Feather name="camera" size={35} color={Colors.MAIN_COLOR} style={styles.mediaContainer} /> */}
-                            <Text style={{ fontFamily: Font.Medium, color: Colors.BLACK }}>Camera</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.8} style={{ justifyContent: 'center', alignItems: 'center' }}  >
-                            {/* <Octicons name="image" size={35} color={Colors.MAIN_COLOR} style={styles.mediaContainer} /> */}
-                            <Text style={{ fontFamily: Font.Medium, color: Colors.BLACK }}>Galary</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.8} style={{ justifyContent: 'center', alignItems: 'center' }}>
-                            {/* <AntDesign name="delete" size={35} color={Colors.MAIN_COLOR} style={styles.mediaContainer} /> */}
-                            <Text style={{ fontFamily: Font.Medium, color: Colors.BLACK }}>Remove</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </BottomSheet>
-        </GestureHandlerRootView >
+        </View >
     )
 }
 
