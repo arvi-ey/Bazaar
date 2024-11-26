@@ -47,6 +47,20 @@ export const GetCartItems = createAsyncThunk(
     }
 )
 
+export const RemoveFromCart = createAsyncThunk(
+    'cart/removefromcart', async (cartId: string) => {
+        try {
+            const response = await axios.post(URL + `cart/removefromcart/${cartId}`)
+            if (response.data.success === true) {
+                return response.data.item
+            }
+        }
+        catch (error: any) {
+            return error.response.data
+        }
+    }
+)
+
 export const cartSlice = createSlice({
     name: "cart",
     initialState: {
@@ -82,6 +96,18 @@ export const cartSlice = createSlice({
             .addCase(GetCartItems.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as any
+            })
+            .addCase(RemoveFromCart.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(RemoveFromCart.fulfilled, (state, action) => {
+                state.loading = false;
+                state.cartitems = state.cartitems.filter(data => data._id !== action.payload._id)
+            })
+            .addCase(RemoveFromCart.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as any;
             })
     }
 })

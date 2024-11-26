@@ -24,6 +24,25 @@ exports.AddToCart = async (req, res) => {
 }
 
 
+exports.RemoveFromCart = async (req, res) => {
+    const { id } = req.params
+    if (!id) return res.status(404).json({ message: "Missing params data" })
+    try {
+        const result = await CartModel.findByIdAndDelete(id)
+        if (result) {
+            res.status(200).json({
+                message: "Product removed from cart",
+                item: result,
+                success: true
+            })
+        }
+    }
+    catch (error) {
+        return res.status(500).json({ message: error })
+    }
+}
+
+
 exports.GetCartItems = async (req, res) => {
     const { userId } = req.params
     if (!userId) return res.status(404).json({ message: "Missing Data" })

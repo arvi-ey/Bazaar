@@ -99,6 +99,8 @@ export default function TabLayout() {
         name="Cart"
         options={{
           title: '',
+          // 
+
           tabBarIcon: ({ color, focused }) => (
             <View style={{ marginTop: 11, width: 60, justifyContent: 'center', position: "relative", alignItems: "center" }}>
               <Ionicons name={focused ? "bag" : "bag-outline"} size={24} color={focused ? Colors.MAIN_COLOR : (theme === "dark" && !focused) ? Colors.WHITE : Colors.BLACK} />

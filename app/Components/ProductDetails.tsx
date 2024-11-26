@@ -154,6 +154,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
             router.push({
                 pathname: "/(tabs)/Cart"
             })
+            return
         }
         if (uid) {
             const cartdata: cartData = {
@@ -161,7 +162,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                 size: SelectSize?.symbol || "",
                 product_id: product?._id || "",
                 description: product?.description || '',
-                price: product?.price || 0,
+                price: product?.price && product.price * (1 - 0.40) || 0,
                 category: product?.category || '',
                 stock: product?.stock || 0,
                 image: product?.images?.[0] || '',
@@ -279,7 +280,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                 }
                 <Button
                     title={productadded ? "View cart" : "Add to cart"}
-                    activeOpacity={0.8}
+                    activeOpacity={0.5}
                     press={AddToCat}
                     textStyle={styles.ButtonText}
                     buttonStyle={[styles.ButtonStyle, { backgroundColor: Colors.SECONDARY_COLOR }]}
