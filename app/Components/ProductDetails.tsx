@@ -171,6 +171,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                 title: product?.title || '',
                 createdAt: Date.now().toString(),
                 deliveryTime: product?.deliveryTime || 0,
+                subTotal: product?.price && product.price * (1 - 0.40) || 0,
             }
             const result = await dispatch(AddToCart(cartdata))
             if (result.payload._id) {

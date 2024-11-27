@@ -17,6 +17,8 @@ export interface cartData {
     size?: string;
     createdAt?: string;
     deliveryTime?: number;
+    subTotal?: number;
+    count?: number;
 }
 
 
@@ -51,6 +53,28 @@ export const RemoveFromCart = createAsyncThunk(
     'cart/removefromcart', async (cartId: string) => {
         try {
             const response = await axios.post(URL + `cart/removefromcart/${cartId}`)
+            if (response.data.success === true) {
+                return response.data.item
+            }
+        }
+        catch (error: any) {
+            return error.response.data
+        }
+    }
+)
+
+export interface body {
+    count?: number,
+    subTotal?: number
+}
+interface UpdateCart {
+    cartId: string
+    body: body
+}
+export const UpdateCartItem = createAsyncThunk('cart/updateitem',
+    async ({ cartId, body }: UpdateCart) => {
+        try {
+            const response = await axios.patch(URL + `cart/updateCart/${cartId}`, { body })
             if (response.data.success === true) {
                 return response.data.item
             }
@@ -106,6 +130,21 @@ export const cartSlice = createSlice({
                 state.cartitems = state.cartitems.filter(data => data._id !== action.payload._id)
             })
             .addCase(RemoveFromCart.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as any;
+            })
+            .addCase(UpdateCartItem.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(UpdateCartItem.fulfilled, (state, action) => {
+                state.loading = false;
+                const updatedData = action.payload as cartData
+                state.cartitems = state.cartitems.map(data =>
+                    data._id === updatedData._id ? updatedData : data
+                )
+            })
+            .addCase(UpdateCartItem.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as any;
             })

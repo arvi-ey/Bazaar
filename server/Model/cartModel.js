@@ -10,6 +10,13 @@ const cartSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    subTotal: {
+        type: Number,
+    },
+    count: {
+        type: Number,
+        default: 1,
+    },
     product_id: {
         type: String,
         required: true,

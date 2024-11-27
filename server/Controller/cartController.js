@@ -43,6 +43,22 @@ exports.RemoveFromCart = async (req, res) => {
 }
 
 
+exports.UpdateCartItems = async (req, res) => {
+    const { id } = req.params
+    const updateData = req.body.body
+    try {
+        const result = await CartModel.findByIdAndUpdate(id, updateData, { new: true })
+        res.status(200).json({
+            message: "Cart upated successfully",
+            success: true,
+            item: result
+        })
+    }
+    catch (error) {
+        return res.status(500).json({ message: error })
+    }
+
+}
 exports.GetCartItems = async (req, res) => {
     const { userId } = req.params
     if (!userId) return res.status(404).json({ message: "Missing Data" })

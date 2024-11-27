@@ -11,7 +11,7 @@ const { width, height } = Dimensions.get('window')
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Button from '../Components/Button';
-import { RemoveFromCart } from '@/Redux/Slice/cartSlicer';
+import { RemoveFromCart, UpdateCartItem } from '@/Redux/Slice/cartSlicer';
 import { router } from 'expo-router';
 interface CartBoxProps {
     item: cartData; // Replace `cartData` with the exact type of your cart item
@@ -30,8 +30,17 @@ const CartBox: FC<CartBoxProps> = ({ item }) => {
     }
 
     useEffect(() => {
-        setSubtotal(count * Number(item.price.toFixed()))
-    }, [count])
+        CalculateSubtotal()
+    }, [item.count])
+
+    const CalculateSubtotal = async () => {
+        if (item._id && item.price && item.count) {
+            const cartId = item._id
+            const subTotal = Number((item.price * item.count).toFixed())
+            const body = { subTotal }
+            await dispatch(UpdateCartItem({ cartId, body }))
+        }
+    }
     const getDateAfterDays = (days: number | null | undefined) => {
         if (!days) return
         const today = new Date();
@@ -63,19 +72,30 @@ const CartBox: FC<CartBoxProps> = ({ item }) => {
                 </View>
                 <View style={{ flexDirection: "row", gap: 15, alignItems: "center", marginTop: 10 }} >
                     <TouchableOpacity activeOpacity={0.5}
-                        onPress={() => {
-                            setCount(prev => prev - 1)
-                            if (count <= 1) {
-                                setCount(1)
-                                return
+                        onPress={async () => {
+                            if (item.count === 1) return
+                            if (item._id && item.count) {
+                                const count = item.count - 1
+                                const cartId = item._id
+                                const body = { count }
+                                const result = await dispatch(UpdateCartItem({ cartId, body }))
+                                // console.log(result)
                             }
                         }}
                         style={{ width: 40, height: 40, borderRadius: 7, backgroundColor: Colors.MAIN_COLOR, justifyContent: "center", alignItems: 'center' }}>
                         <AntDesign name="minus" size={24} color={Colors.BLACK} />
                     </TouchableOpacity>
-                    <Text style={{ color: FontColor, fontFamily: Font.Bold, fontSize: 20 }} >{count}</Text>
+                    <Text style={{ color: FontColor, fontFamily: Font.Bold, fontSize: 20 }} >{item.count}</Text>
                     <TouchableOpacity activeOpacity={0.5}
-                        onPress={() => setCount(prev => prev + 1)}
+                        onPress={async () => {
+                            if (item._id && item.count && item.count >= 0) {
+                                const count = item.count + 1
+                                const cartId = item._id
+                                const body = { count }
+                                const result = await dispatch(UpdateCartItem({ cartId, body }))
+                                // console.log(result)
+                            }
+                        }}
                         style={{ width: 40, height: 40, borderRadius: 7, backgroundColor: Colors.MAIN_COLOR, justifyContent: "center", alignItems: 'center' }}>
                         <AntDesign name="plus" size={24} color={Colors.BLACK} />
                     </TouchableOpacity>
@@ -89,14 +109,14 @@ const CartBox: FC<CartBoxProps> = ({ item }) => {
                 />
                 <View style={{ flexDirection: "row", width: 150, justifyContent: "space-between", marginTop: 10 }}>
                     <Text style={{ fontFamily: Font.Medium, color: FontColor, fontSize: 15 }}>Subtotal:</Text>
-                    <Text style={{ fontFamily: Font.Medium, color: FontColor, fontSize: 15 }}>₹ {subtotal}</Text>
+                    <Text style={{ fontFamily: Font.Medium, color: FontColor, fontSize: 15 }}>₹ {item.subTotal}</Text>
 
                 </View>
                 <TouchableOpacity style={{ flexDirection: "row", marginTop: 5, backgroundColor: Colors.MAIN_COLOR, width: 150, justifyContent: "center", alignItems: 'center', height: 50, borderRadius: 7 }}>
                     <Text style={{ color: Colors.BLACK, fontFamily: Font.Bold }}>Place Order</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </View >
     )
 }
 
