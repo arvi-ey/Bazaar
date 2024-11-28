@@ -84,7 +84,6 @@ const Cart = () => {
                     textStyle={{ color: Colors.BLACK, fontFamily: Font.Bold }}
                 />
             </View>
-
         </View>
     )
 }

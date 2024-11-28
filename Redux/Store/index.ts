@@ -7,6 +7,7 @@ import { CategoryReducer } from '../Slice/categorySlicer';
 import { ProductRedducer } from '../Slice/productsSlicer';
 import { SinngleProductReducer } from '../Slice/productSlicer';
 import { cartRducer } from "../Slice/cartSlicer"
+import { addressReducer } from "../Slice/addressSlicer"
 export const store = configureStore({
     reducer: {
         auth: authReducer,
@@ -17,6 +18,7 @@ export const store = configureStore({
         product: ProductRedducer,
         singleproduct: SinngleProductReducer,
         cart: cartRducer,
+        adress: addressReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 })

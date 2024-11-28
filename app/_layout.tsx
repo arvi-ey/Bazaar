@@ -70,6 +70,7 @@ export default function RootLayout() {
           <Stack.Screen name="Product" options={{ headerShown: false, }} />
           <Stack.Screen name="Login" options={{ headerShown: false, }} />
           <Stack.Screen name="Signup" options={{ headerShown: false, }} />
+          <Stack.Screen name="Paymentpage" options={{ headerShown: false, }} />
           <Stack.Screen name="Account" />
           <Stack.Screen name="+not-found" />
         </Stack>

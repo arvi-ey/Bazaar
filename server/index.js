@@ -8,6 +8,7 @@ const CategoryRouter = require("./Router/categoryRouter")
 const UseRouter = require("./Router/userRouter")
 const BannerRouter = require("./Router/bannerRouter")
 const CartRouter = require("./Router/cartRouter")
+const AddressRouter = require("./Router/addressRouter")
 const bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
 var cors = require('cors')
@@ -41,6 +42,7 @@ app.use('/category', CategoryRouter)
 app.use("/user", UseRouter)
 app.use("/banner", BannerRouter)
 app.use("/cart", CartRouter)
+app.use("/address", AddressRouter)
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {

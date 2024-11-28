@@ -3,18 +3,17 @@ import React, { FC, useEffect, useState } from 'react'
 import { Font } from '@/Font'
 import { Colors } from '@/Theme'
 import { useColorScheme } from '@/hooks/useColorScheme';
-import LottieView from 'lottie-react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/Redux/Store';
 import { cartData } from '@/Redux/Slice/cartSlicer';
 const { width, height } = Dimensions.get('window')
-import Ionicons from '@expo/vector-icons/Ionicons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Button from '../Components/Button';
 import { RemoveFromCart, UpdateCartItem } from '@/Redux/Slice/cartSlicer';
 import { router } from 'expo-router';
+
 interface CartBoxProps {
-    item: cartData; // Replace `cartData` with the exact type of your cart item
+    item: cartData;
 }
 const CartBox: FC<CartBoxProps> = ({ item }) => {
     const theme = useColorScheme();
@@ -79,7 +78,6 @@ const CartBox: FC<CartBoxProps> = ({ item }) => {
                                 const cartId = item._id
                                 const body = { count }
                                 const result = await dispatch(UpdateCartItem({ cartId, body }))
-                                // console.log(result)
                             }
                         }}
                         style={{ width: 40, height: 40, borderRadius: 7, backgroundColor: Colors.MAIN_COLOR, justifyContent: "center", alignItems: 'center' }}>
@@ -93,7 +91,6 @@ const CartBox: FC<CartBoxProps> = ({ item }) => {
                                 const cartId = item._id
                                 const body = { count }
                                 const result = await dispatch(UpdateCartItem({ cartId, body }))
-                                // console.log(result)
                             }
                         }}
                         style={{ width: 40, height: 40, borderRadius: 7, backgroundColor: Colors.MAIN_COLOR, justifyContent: "center", alignItems: 'center' }}>
@@ -112,7 +109,12 @@ const CartBox: FC<CartBoxProps> = ({ item }) => {
                     <Text style={{ fontFamily: Font.Medium, color: FontColor, fontSize: 15 }}>₹ {item.subTotal}</Text>
 
                 </View>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 5, backgroundColor: Colors.MAIN_COLOR, width: 150, justifyContent: "center", alignItems: 'center', height: 50, borderRadius: 7 }}>
+                <TouchableOpacity
+                    onPress={() => router.push({
+                        pathname: "/Paymentpage",
+                        params: { item: JSON.stringify(item) }
+                    })}
+                    style={{ flexDirection: "row", marginTop: 5, backgroundColor: Colors.MAIN_COLOR, width: 150, justifyContent: "center", alignItems: 'center', height: 50, borderRadius: 7 }}>
                     <Text style={{ color: Colors.BLACK, fontFamily: Font.Bold }}>Place Order</Text>
                 </TouchableOpacity>
             </View>
