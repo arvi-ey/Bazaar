@@ -35,8 +35,6 @@ const Paymentpage = () => {
         };
         return today.toLocaleDateString('en-US', options);
     }
-
-    console.log(address)
     return (
         <View style={{ flex: 1, gap: 10, alignItems: "center", width, backgroundColor: Background }}>
             <View style={{ width, height: 50, flexDirection: 'row', paddingLeft: 20, gap: 20, marginTop: 10, alignItems: 'center' }}>
@@ -64,60 +62,55 @@ const Paymentpage = () => {
                 </View>
             </View >
             <View style={{ width, alignItems: 'center' }}>
-                <TouchableOpacity
-                    onPress={() => router.push({
-                        pathname: "/Address"
-                    })}
-                    style={{
-                        flexDirection: "row", gap: 10, width: 200, justifyContent: 'center', borderRadius: 5,
-                        alignItems: 'center', backgroundColor: Colors.MAIN_COLOR
-                    }} >
-                    <Ionicons name="add-outline" size={24} color={Colors.BLACK} />
-                    <Text style={{ color: Colors.BLACK, fontFamily: Font.Regular }}>{address && address.length > 0 ? "Add new address" : "Add address"}</Text>
-                </TouchableOpacity>
-                <ScrollView contentContainerStyle={{ width, justifyContent: "center", alignItems: 'center' }} >
-                    {
-                        address && address.map((value, index) => {
-                            return (
-                                <View key={index} style={{ width: width - 10, gap: 10, marginLeft: 20, marginTop: 10, flexDirection: "row" }}>
-                                    <View style={{ width: "80%", }}>
-                                        <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
-                                            {value.label}
-                                        </Text>
-                                        <View style={{ flexDirection: "row", gap: 10 }}>
-                                            <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
-                                                {value.street},
-                                            </Text>
-                                            <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
-                                                {value.landmark}
-                                            </Text>
-                                        </View>
-                                        <View style={{ flexDirection: "row", gap: 10 }}>
-                                            <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
-                                                State: {value.state},
-                                            </Text>
-                                            <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
-                                                pincode: {value.pinCode}
-                                            </Text>
-                                        </View>
-                                        <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
-                                            Address type: {value.addressType}
-                                        </Text>
-                                    </View>
-                                    <View style={{ gap: 20, justifyContent: "center", alignItems: 'center' }}>
-                                        <TouchableOpacity activeOpacity={0.5} style={{ backgroundColor: Colors.MAIN_COLOR, paddingHorizontal: 5, borderRadius: 5, height: 20, justifyContent: 'center', alignItems: 'center', width: 40 }}>
-                                            <Text style={{ color: Colors.BLACK, fontFamily: Font.Medium, fontSize: 10 }}>Edit</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity activeOpacity={0.5} style={{ justifyContent: 'center', alignItems: 'center', height: 40, width: 40 }}>
-                                            <AntDesign name="delete" size={20} color={Colors.EROR_TEXT} style={{ opacity: 0.7 }} />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            )
-                        })
+                <View style={{ width, flexDirection: "row", justifyContent: "space-around" }}>
 
-                    }
-                </ScrollView>
+                    <TouchableOpacity
+                        onPress={() => router.push({
+                            pathname: "/Address"
+                        })}
+                        style={{
+                            flexDirection: "row", gap: 5, width: 150, justifyContent: 'center', borderRadius: 5,
+                            alignItems: 'center', backgroundColor: Colors.MAIN_COLOR
+                        }} >
+                        <Ionicons name="add-outline" size={24} color={Colors.BLACK} />
+                        <Text style={{ color: Colors.BLACK, fontFamily: Font.Regular }}>{address && address.length > 0 ? "Add new address" : "Add address"}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => router.push("/Alladdress")}
+                        activeOpacity={0.5} style={{
+                            flexDirection: "row", gap: 10, width: 150, justifyContent: 'center', borderRadius: 5,
+                            alignItems: 'center', backgroundColor: Colors.MAIN_COLOR
+                        }}>
+                        <Text style={{ color: Colors.BLACK, fontFamily: Font.Regular }}>View all addresses</Text>
+                    </TouchableOpacity>
+                </View>
+                {address && address.length > 0 ?
+                    <View style={{ width: width - 10, marginLeft: 20, marginVertical: 5, }}>
+                        <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
+                            {address[0].label}
+                        </Text>
+                        <View style={{ flexDirection: "row", gap: 10 }}>
+                            <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
+                                {address[0].street},
+                            </Text>
+                            <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
+                                {address[0].landmark}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: "row", gap: 10 }}>
+                            <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
+                                State: {address[0].state},
+                            </Text>
+                            <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
+                                pincode: {address[0].pinCode}
+                            </Text>
+                        </View>
+                        <Text style={{ color: FontColor, opacity: 0.7, fontFamily: Font.Regular, fontSize: 15 }}>
+                            Address type: {address[0].addressType}
+                        </Text>
+                    </View>
+                    : null}
+
             </View >
         </View >
     )

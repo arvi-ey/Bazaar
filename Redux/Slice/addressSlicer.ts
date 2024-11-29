@@ -19,6 +19,7 @@ export interface Address {
 export const AddAddress = createAsyncThunk(
     'address/addaddress', async (data: Address) => {
         try {
+            console.log(data)
             const response = await axios.post(URL + 'address/addaddress', data)
             if (response.data.success === true) {
                 return response.data.data
@@ -45,6 +46,40 @@ export const GetAddress = createAsyncThunk(
     }
 )
 
+export const DeleteAddress = createAsyncThunk(
+    'address/deleteAddress', async (id: string) => {
+        try {
+            const response = await axios.delete(URL + `address/updateuseraddress/${id}`, { withCredentials: true });
+            if (response.data.success === true) {
+                return response.data.data
+            }
+        }
+        catch (error: any) {
+            return error.response.data
+        }
+    }
+)
+
+export interface Update {
+    id: string,
+    data: Address
+}
+
+export const UpdateAddress = createAsyncThunk(
+
+    'address/updateAddress', async (value: Update) => {
+        try {
+            const response = await axios.patch(URL + `address/updateuseraddress/${value.id}`, value.data)
+            if (response.data.success === true) {
+                console.log(response.data.data)
+                return response.data.data
+            }
+        }
+        catch (error: any) {
+            return error.response.data
+        }
+    }
+)
 
 export const addressSlice = createSlice({
     name: "address",
@@ -80,6 +115,33 @@ export const addressSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload as any
             })
+            .addCase(DeleteAddress.pending, (state, action) => {
+                state.loading = true;
+                state.error = null
+            })
+            .addCase(DeleteAddress.fulfilled, (state, action) => {
+                state.loading = false;
+                state.address = state.address.filter(data => data._id !== action.payload._id)
+            })
+            .addCase(DeleteAddress.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as any
+            })
+            .addCase(UpdateAddress.pending, (state, action) => {
+                state.loading = true;
+                state.error = null
+            })
+            .addCase(UpdateAddress.fulfilled, (state, action) => {
+                state.loading = false;
+                const updatedData = action.payload
+                state.address = state.address.map(data => data._id === updatedData._id ? updatedData : data)
+            })
+            .addCase(UpdateAddress.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as any
+            }
+            )
+
     }
 })
 

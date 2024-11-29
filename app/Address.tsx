@@ -15,6 +15,7 @@ import { router } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router';
 import Button from './Components/Button';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import { UpdateAddress } from '@/Redux/Slice/addressSlicer';
 import { AddAddress, Address as AddresData, GetAddress } from '@/Redux/Slice/addressSlicer';
 interface ErrorText {
     value: string,
@@ -45,13 +46,27 @@ const Address = () => {
         addressType: ''
     }
     )
-    const [addressType, setAddresType] = useState<string>("")
     const dispatch = useDispatch<AppDispatch>();
     const AddressType = ["Home", "Office", "Others"]
+    const { item } = useLocalSearchParams()
+    const parsedItem = typeof item === 'string' ? JSON.parse(item) : null;
 
+    useEffect(() => {
+        if (item && parsedItem) {
+            setData({
+                street: parsedItem.street,
+                label: parsedItem.label,
+                city: parsedItem.city,
+                state: parsedItem.state,
+                pinCode: parsedItem.pinCode.toString(),
+                landmark: parsedItem.landmark,
+                addressType: parsedItem.addressType,
+            })
+        }
+    }, [item])
 
     const HandleSaveAddress = async () => {
-        const { street, city, label, landmark, pinCode, state } = data
+        const { street, city, label, landmark, pinCode, state, addressType } = data
         if (!label) {
             setErrortext({ value: "label", message: "Address line1 is required" })
             return
@@ -80,10 +95,21 @@ const Address = () => {
             setErrortext({ value: "pinCode", message: "invalid Pincode" })
             return
         }
-        const addressdata = { ...data, userId: uid || "", addressType: addressType, pinCode: data.pinCode.toString() }
-        const result = await dispatch(AddAddress(addressdata))
-        if (result.payload._id && uid) {
-            router.back()
+        const addressdata = { ...data, userId: uid || "", pinCode: data.pinCode.toString() }
+        if (item && parsedItem && parsedItem._id) {
+            const result = await dispatch(UpdateAddress({ id: parsedItem._id, data: addressdata }))
+            if (result.payload._id && uid) {
+                router.back()
+                return
+            }
+        }
+        else {
+
+            const result = await dispatch(AddAddress(addressdata))
+            if (result.payload._id && uid) {
+                router.back()
+                return
+            }
         }
     }
 
@@ -97,9 +123,9 @@ const Address = () => {
                 const city = data[0].PostOffice[1].Name
                 setData(prev => ({ ...prev, state }))
                 setData(prev => ({ ...prev, city }))
-                return state;
+                return
             } else {
-                console.log("Invalid Pincode or data not found.");
+                setErrortext({ value: "pinCode", message: "invalid Pincode" });
                 return null;
             }
         } catch (error) {
@@ -173,7 +199,7 @@ const Address = () => {
                         }}
                     />
                     {errorText.value === "pinCode" ?
-                        <View style={{ width: "100%", backgroundColor: "red", position: "absolute", bottom: -20 }}>
+                        <View style={{ width: "100%", position: "absolute", bottom: -20 }}>
                             <Text style={{ color: Colors.MAIN_COLOR, fontFamily: Font.Light, paddingLeft: 20 }}>{errorText.message}</Text>
                         </View> : null
                     }
@@ -212,17 +238,17 @@ const Address = () => {
                     {AddressType?.map((value, index) => {
                         return (
                             <TouchableOpacity
-                                onPress={() => setAddresType(value)}
+                                onPress={() => setData({ ...data, addressType: value })}
                                 key={index}
                                 style={{ marginTop: 10, backgroundColor: InputBG, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5 }}>
-                                <Text style={{ color: addressType === value ? Colors.MAIN_COLOR : FontColor, fontFamily: addressType === value ? Font.Bold : Font.Regular }}>{value}</Text>
+                                <Text style={{ color: data.addressType === value ? Colors.MAIN_COLOR : FontColor, fontFamily: data.addressType === value ? Font.Bold : Font.Regular }}>{value}</Text>
                             </TouchableOpacity>
                         )
                     })}
                 </View>
             </View>
             <Button
-                title='Save'
+                title={item ? "Update" : "Save"}
                 press={HandleSaveAddress}
                 activeOpacity={0.5}
                 buttonStyle={{ marginTop: 20, width: 250, height: 50, borderRadius: 7, backgroundColor: Colors.MAIN_COLOR, justifyContent: "center", alignItems: "center" }}
