@@ -16,12 +16,14 @@ import { GetUserOnce, CheckAuth } from '@/Redux/Slice/authSlicer';
 import { GetUserInfo } from '@/Redux/Slice/userSlicer';
 import Button from '../Components/Button';
 import { GetCartItems } from '@/Redux/Slice/cartSlicer';
+import { GetAddress } from '@/Redux/Slice/addressSlicer';
 export default function TabLayout() {
   const theme = useColorScheme();
   const dispatch = useDispatch<AppDispatch>();
   const { uid } = useSelector((state: RootState) => state.auth)
   const { user } = useSelector((state: RootState) => state.user)
   const { cartitems } = useSelector((state: RootState) => state.cart)
+  const { address } = useSelector((state: RootState) => state.address)
 
 
   useEffect(() => {
@@ -34,8 +36,11 @@ export default function TabLayout() {
     if (uid) {
       dispatch(GetUserInfo(uid));
       dispatch(GetCartItems(uid))
+      dispatch(GetAddress(uid))
     }
   }, [uid])
+
+  // console.log(address)
 
   const Logo = require("../../assets/images/App_logo.png")
 

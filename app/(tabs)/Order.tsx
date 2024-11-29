@@ -4,10 +4,14 @@ import { Font } from '@/Font'
 import { Colors } from '@/Theme'
 import { useColorScheme } from '@/hooks/useColorScheme';
 import LottieView from 'lottie-react-native';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/Redux/Store';
 
 const { width, height } = Dimensions.get('window')
 const Order = () => {
     const theme = useColorScheme();
+    const { address } = useSelector((state: RootState) => state.address)
+
     const Background = theme === "dark" ? Colors.BLACK : Colors.WHITE
     const FontColor = theme === "dark" ? Colors.WHITE : Colors.BLACK
     return (

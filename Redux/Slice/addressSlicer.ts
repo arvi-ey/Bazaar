@@ -5,12 +5,14 @@ import axios from 'axios';
 
 export interface Address {
     label: string,
-    userId: string,
+    userId?: string,
     street: string,
     city: string,
     state: string,
     pinCode: string,
     _id?: string,
+    landmark: string,
+    addressType: string,
     isDefault?: boolean
 }
 
@@ -30,9 +32,9 @@ export const AddAddress = createAsyncThunk(
 
 
 export const GetAddress = createAsyncThunk(
-    'address/getAddress', async (userId: string) => {
+    'address/getAddress', async (id: string) => {
         try {
-            const response = await axios.get(URL + `getuseraddress/${userId}`);
+            const response = await axios.get(URL + `address/getuseraddress/${id}`);
             if (response.data.success === true) {
                 return response.data.data
             }
@@ -60,6 +62,7 @@ export const addressSlice = createSlice({
             })
             .addCase(AddAddress.fulfilled, (state, action) => {
                 state.loading = false;
+                state.address = [...state.address, action.payload]
             })
             .addCase(AddAddress.rejected, (state, action) => {
                 state.loading = false;
@@ -71,7 +74,7 @@ export const addressSlice = createSlice({
             })
             .addCase(GetAddress.fulfilled, (state, action) => {
                 state.loading = false;
-                state.address = [...state.address, action.payload]
+                state.address = action.payload
             })
             .addCase(GetAddress.rejected, (state, action) => {
                 state.loading = false;

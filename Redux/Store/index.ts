@@ -18,7 +18,7 @@ export const store = configureStore({
         product: ProductRedducer,
         singleproduct: SinngleProductReducer,
         cart: cartRducer,
-        adress: addressReducer
+        address: addressReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 })

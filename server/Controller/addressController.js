@@ -22,10 +22,10 @@ exports.AddAddress = async (req, res) => {
 }
 
 exports.GetUserAddress = async (req, res) => {
-    const { userId } = req.params
-    if (!userId) return res.status(404).json({ message: "Missing Data" })
+    const { id } = req.params
+    if (!id) return res.status(404).json({ message: "Missing Data" })
     try {
-        const result = await AddressModel.find({ userId })
+        const result = await AddressModel.find({ userId: id })
         if (result) {
             res.status(200).json({
                 message: "Fetch user's addresses successfully",

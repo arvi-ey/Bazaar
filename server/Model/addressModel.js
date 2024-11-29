@@ -29,6 +29,12 @@ const addressSchema = new mongoose.Schema({
         required: [true, 'Postal Code is required'],
         trim: true
     },
+    landmark: {
+        type: String,
+    },
+    addressType: {
+        type: String,
+    },
     isDefault: {
         type: Boolean,
         default: false
