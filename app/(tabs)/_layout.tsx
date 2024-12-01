@@ -25,7 +25,6 @@ export default function TabLayout() {
   const { cartitems } = useSelector((state: RootState) => state.cart)
   const { address } = useSelector((state: RootState) => state.address)
 
-
   useEffect(() => {
     dispatch(GetBanners());
     dispatch(CheckAuth());

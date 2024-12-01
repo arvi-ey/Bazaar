@@ -35,6 +35,17 @@ const Alladdress = () => {
                 <Text style={{ fontFamily: Font.Medium, color: FontColor, fontSize: 25 }}>All address</Text>
             </View>
             <View style={{ width }}>
+                <TouchableOpacity
+                    onPress={() => router.push({
+                        pathname: "/Address"
+                    })}
+                    style={{
+                        flexDirection: "row", gap: 5, width: 150, justifyContent: 'center', borderRadius: 5,
+                        alignItems: 'center', backgroundColor: Colors.MAIN_COLOR, marginLeft: 10
+                    }} >
+                    <Ionicons name="add-outline" size={24} color={Colors.BLACK} />
+                    <Text style={{ color: Colors.BLACK, fontFamily: Font.Regular }}>{address && address.length > 0 ? "Add new address" : "Add address"}</Text>
+                </TouchableOpacity>
                 <ScrollView contentContainerStyle={{}}>
                     {address && address.map((value, index) => {
                         return (
