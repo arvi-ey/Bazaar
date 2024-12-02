@@ -146,7 +146,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     );
 
     const AddToCat = async () => {
-        if (!SelectSize) {
+        if (!SelectSize && !productadded) {
             setErrortext("Please select size")
             return
         }
@@ -280,7 +280,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                     null
                 }
                 <Button
-                    title={productadded ? "Add to cart" : "Add to cart"}
+                    title={productadded ? "View cart" : "Add to cart"}
                     activeOpacity={0.5}
                     press={AddToCat}
                     textStyle={styles.ButtonText}

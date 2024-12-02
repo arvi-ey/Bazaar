@@ -65,7 +65,7 @@ const Paymentpage = () => {
                 </TouchableOpacity>
                 <Text style={{ fontFamily: Font.Medium, color: FontColor, fontSize: 25 }}>Payment</Text>
             </View>
-            <ScrollView contentContainerStyle={{ paddingBottom: 100 }} >
+            <ScrollView contentContainerStyle={{ paddingBottom: 50 }} >
                 <View style={{ height: 150, width: width - 10, justifyContent: "center", flexDirection: "row", borderBottomColor: FontColor }}>
                     <View style={{ width: "40%", }} >
                         <Image source={{ uri: parsedItem.image }} style={{ height: 100, width: "100%", borderRadius: 10, resizeMode: "center" }} />
@@ -149,18 +149,18 @@ const Paymentpage = () => {
                         </View>
                     </View>
                     <View style={{ width: width - 10, paddingVertical: 10, gap: 15, borderWidth: 0.7, borderBottomColor: FontColor }}>
-                        <View style={{ width: "90%", paddingLeft: 10, height: 50, flexDirection: "row", gap: 15, alignItems: "center" }}>
+                        <TouchableOpacity onPress={() => setSelectCash(!selectCash)} style={{ width: "90%", paddingLeft: 10, height: 50, flexDirection: "row", gap: 15, alignItems: "center" }}>
                             <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10 }}>
-                                <TouchableOpacity onPress={() => setSelectCash(!selectCash)} style={{ height: 20, width: 20, borderWidth: 1, borderColor: FontColor, borderRadius: 20, justifyContent: "center", alignItems: "center", }}>
+                                <View style={{ height: 20, width: 20, borderWidth: 1, borderColor: FontColor, borderRadius: 20, justifyContent: "center", alignItems: "center", }}>
                                     {selectCash ?
                                         <View style={{ height: 10, width: 10, backgroundColor: FontColor, borderRadius: 20 }} />
                                         : null
                                     }
-                                </TouchableOpacity>
+                                </View>
                                 <Text style={{ color: FontColor, fontFamily: Font.Medium, fontSize: 18 }}>Cash on delivery(cash/UPI)</Text>
                             </View>
                             <Image source={require("../assets/images/money.png")} style={{ height: 30, width: 30 }} />
-                        </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={{ width: width - 10, paddingVertical: 5, gap: 5, borderWidth: 0.7, borderBottomColor: FontColor }}>
                         <TouchableOpacity style={{ width: "90%", paddingLeft: 10, height: 50, flexDirection: "row", gap: 10, alignItems: "center" }}>
@@ -173,6 +173,7 @@ const Paymentpage = () => {
                             <Text style={{ color: FontColor, fontFamily: Font.Medium, fontSize: 18 }}>Pay by card</Text>
                             <AntDesign name="down" size={12} color={FontColor} style={{ opacity: 0.7 }} />
                         </TouchableOpacity>
+                        <Text style={{ color: FontColor, fontFamily: Font.Medium, fontSize: 20, marginLeft: 10 }} > UPI payments</Text>
                         <View style={{ width: "90%", gap: 20, marginTop: 10, marginBottom: 10, flexDirection: "row" }}>
                             {
                                 PaymentgateWay.map((data, index) => {
@@ -210,8 +211,8 @@ const Paymentpage = () => {
                         textStyle={{ color: Colors.BLACK, fontFamily: Font.Bold, fontSize: 18, }}
                     />
                 </View >
-            </ScrollView>
-        </View>
+            </ScrollView >
+        </View >
     )
 }
 

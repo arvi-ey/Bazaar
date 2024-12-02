@@ -70,7 +70,7 @@ const CartBox: FC<CartBoxProps> = ({ item }) => {
                     </View>
                 </View>
                 <View style={{ flexDirection: "row", gap: 15, alignItems: "center", marginTop: 10 }} >
-                    <TouchableOpacity activeOpacity={0.5}
+                    <TouchableOpacity
                         onPress={async () => {
                             if (item.count === 1) return
                             if (item._id && item.count) {
@@ -80,11 +80,11 @@ const CartBox: FC<CartBoxProps> = ({ item }) => {
                                 const result = await dispatch(UpdateCartItem({ cartId, body }))
                             }
                         }}
-                        style={{ width: 40, height: 40, borderRadius: 7, backgroundColor: Colors.MAIN_COLOR, justifyContent: "center", alignItems: 'center' }}>
+                        style={{ width: 50, height: 50, borderRadius: 7, backgroundColor: Colors.MAIN_COLOR, justifyContent: "center", alignItems: 'center' }}>
                         <AntDesign name="minus" size={24} color={Colors.BLACK} />
                     </TouchableOpacity>
                     <Text style={{ color: FontColor, fontFamily: Font.Bold, fontSize: 20 }} >{item.count}</Text>
-                    <TouchableOpacity activeOpacity={0.5}
+                    <TouchableOpacity
                         onPress={async () => {
                             if (item._id && item.count && item.count >= 0) {
                                 const count = item.count + 1
@@ -93,7 +93,7 @@ const CartBox: FC<CartBoxProps> = ({ item }) => {
                                 const result = await dispatch(UpdateCartItem({ cartId, body }))
                             }
                         }}
-                        style={{ width: 40, height: 40, borderRadius: 7, backgroundColor: Colors.MAIN_COLOR, justifyContent: "center", alignItems: 'center' }}>
+                        style={{ width: 50, height: 50, borderRadius: 7, backgroundColor: Colors.MAIN_COLOR, justifyContent: "center", alignItems: 'center' }}>
                         <AntDesign name="plus" size={24} color={Colors.BLACK} />
                     </TouchableOpacity>
                 </View>
