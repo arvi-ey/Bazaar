@@ -22,6 +22,8 @@ const ProductBox = () => {
     const { user } = useSelector((state: RootState) => state.user)
     const [page, setPage] = useState<number>(0)
     const navigation = useNavigation();
+    const Background = theme === "dark" ? Colors.BLACK : Colors.WHITE
+    const FontColor = theme === "dark" ? Colors.WHITE : Colors.BLACK
 
     useEffect(() => {
         GetData()
@@ -119,10 +121,11 @@ const ProductBox = () => {
     };
     return (
         <View style={{ width, justifyContent: 'center', alignItems: 'center' }}>
-            <View style={{ width: width - 20, marginTop: 10 }}>
-                <TouchableOpacity style={{ width: 50, height: 30, }} onPress={() => router.push("/(tabs)")}>
-                    <AntDesign name="arrowleft" size={30} color={theme === "dark" ? Colors.WHITE : Colors.BLACK} />
+            <View style={{ width, height: 50, flexDirection: 'row', paddingLeft: 20, gap: 20, marginTop: 10, alignItems: 'center' }}>
+                <TouchableOpacity onPress={() => router.push("/(tabs)")}>
+                    <Ionicons name="arrow-back-outline" size={30} color={FontColor} />
                 </TouchableOpacity>
+                <Text style={{ fontFamily: Font.Medium, color: FontColor, fontSize: 25 }}>All products</Text>
             </View>
             <FlatList
                 contentContainerStyle={{ width, marginTop: 10, justifyContent: 'center', alignItems: 'center' }}

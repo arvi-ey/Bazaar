@@ -280,11 +280,11 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                     null
                 }
                 <Button
-                    title={productadded ? "View cart" : "Add to cart"}
+                    title={productadded ? "Add to cart" : "Add to cart"}
                     activeOpacity={0.5}
                     press={AddToCat}
                     textStyle={styles.ButtonText}
-                    buttonStyle={[styles.ButtonStyle, { backgroundColor: Colors.SECONDARY_COLOR }]}
+                    buttonStyle={[styles.ButtonStyle, { backgroundColor: Colors.MAIN_COLOR }]}
                 />
             </View>
         </View >
