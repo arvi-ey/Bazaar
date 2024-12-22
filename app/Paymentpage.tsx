@@ -48,7 +48,10 @@ const Paymentpage = () => {
         if (result && result.meta.arg.userId) {
 
             await dispatch(RemoveFromCart(parsedItem._id))
-            router.push("/OrderPlaced")
+            router.push({
+                pathname: "/OrderPlaced",
+                params: { item: JSON.stringify(parsedItem) }
+            })
         }
 
     }
