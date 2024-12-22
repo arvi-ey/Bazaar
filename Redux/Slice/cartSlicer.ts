@@ -148,6 +148,7 @@ export const cartSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload as any;
             })
+        // .addCase()
     }
 })
 

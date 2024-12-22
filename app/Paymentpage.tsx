@@ -1,25 +1,23 @@
-import { StyleSheet, Text, View, Dimensions, Image, FlatList, TouchableOpacity, ScrollView, ScrollViewBase } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, Image, FlatList, TouchableOpacity, ScrollView, ScrollViewBase, ActivityIndicator } from 'react-native'
 import React, { FC, useEffect, useState } from 'react'
 import { Font } from '@/Font'
 import { Colors } from '@/Theme'
 import { useColorScheme } from '@/hooks/useColorScheme';
-import LottieView from 'lottie-react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/Redux/Store';
-import { cartData } from '@/Redux/Slice/cartSlicer';
 const { width, height } = Dimensions.get('window')
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { RemoveFromCart } from '@/Redux/Slice/cartSlicer';
 import { router } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router';
 import Button from './Components/Button';
-import index from '../web/src/components/Analytics/index';
-
+import { PlaceOrder } from '@/Redux/Slice/orderSlicer';
+import { OrderData } from '@/Redux/Slice/orderSlicer';
 
 const Paymentpage = () => {
     const theme = useColorScheme();
     const { address } = useSelector((state: RootState) => state.address)
+    const { loading } = useSelector((state: RootState) => state.order)
     const Background = theme === "dark" ? Colors.BLACK : Colors.WHITE
     const FontColor = theme === "dark" ? Colors.WHITE : Colors.BLACK
     const dispatch = useDispatch<AppDispatch>();
@@ -30,6 +28,25 @@ const Paymentpage = () => {
     const Dark = theme === "dark"
     const InputBG = Dark ? "#393C41" : "#F3F3F6"
 
+    const ProcedePayment = async () => {
+        const data: OrderData = {
+            productId: parsedItem.product_id,
+            image: parsedItem.image,
+            deliveryTime: parsedItem.deliveryTime,
+            paymentMode: selectCash ? "CASH" : "NONE",
+            orderStatus: "PLACED",
+            paymentStatus: "PENDING",
+            productTitle: parsedItem.title,
+            quantity: parsedItem.count,
+            size: parsedItem.size,
+            totalPrice: parsedItem.subTotal,
+            userId: parsedItem.userId,
+        }
+
+        const result = await dispatch(PlaceOrder(data))
+        if (result && result.meta.arg.userId) router.push("/OrderPlaced")
+
+    }
     const getDateAfterDays = (days: number | null | undefined) => {
         if (!days) return
         const today = new Date();
@@ -149,18 +166,18 @@ const Paymentpage = () => {
                         </View>
                     </View>
                     <View style={{ width: width - 10, paddingVertical: 10, gap: 15, borderWidth: 0.7, borderBottomColor: FontColor }}>
-                        <TouchableOpacity onPress={() => setSelectCash(!selectCash)} style={{ width: "90%", paddingLeft: 10, height: 50, flexDirection: "row", gap: 15, alignItems: "center" }}>
+                        <View style={{ width: "90%", paddingLeft: 10, height: 50, flexDirection: "row", gap: 15, alignItems: "center" }}>
                             <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10 }}>
-                                <View style={{ height: 20, width: 20, borderWidth: 1, borderColor: FontColor, borderRadius: 20, justifyContent: "center", alignItems: "center", }}>
+                                <TouchableOpacity onPress={() => setSelectCash(!selectCash)} style={{ height: 20, width: 20, borderWidth: 1, borderColor: FontColor, borderRadius: 20, justifyContent: "center", alignItems: "center", }}>
                                     {selectCash ?
                                         <View style={{ height: 10, width: 10, backgroundColor: FontColor, borderRadius: 20 }} />
                                         : null
                                     }
-                                </View>
+                                </TouchableOpacity>
                                 <Text style={{ color: FontColor, fontFamily: Font.Medium, fontSize: 18 }}>Cash on delivery(cash/UPI)</Text>
                             </View>
                             <Image source={require("../assets/images/money.png")} style={{ height: 30, width: 30 }} />
-                        </TouchableOpacity>
+                        </View>
                     </View>
                     <View style={{ width: width - 10, paddingVertical: 5, gap: 5, borderWidth: 0.7, borderBottomColor: FontColor }}>
                         <TouchableOpacity style={{ width: "90%", paddingLeft: 10, height: 50, flexDirection: "row", gap: 10, alignItems: "center" }}>
@@ -204,12 +221,20 @@ const Paymentpage = () => {
                             <Text style={{ color: FontColor, fontFamily: Font.Medium, fontSize: 18 }}>₹{(parsedItem.subTotal + 50 + 5)}</Text>
                         </View>
                     </View>
-                    <Button
-                        title='Make Payment'
-                        activeOpacity={0.5}
-                        buttonStyle={{ backgroundColor: Colors.MAIN_COLOR, height: 60, width: width - 50, marginTop: 20, justifyContent: "center", alignItems: "center", borderRadius: 7 }}
-                        textStyle={{ color: Colors.BLACK, fontFamily: Font.Bold, fontSize: 18, }}
-                    />
+                    {
+                        loading
+                            ?
+                            <View style={{ width, justifyContent: 'center', alignItems: 'center' }}>
+                                <ActivityIndicator color={Colors.MAIN_COLOR} size="large" />
+                            </View> :
+                            <Button
+                                title='Make Payment'
+                                activeOpacity={0.5}
+                                press={ProcedePayment}
+                                buttonStyle={{ backgroundColor: Colors.MAIN_COLOR, height: 60, width: width - 50, marginTop: 20, justifyContent: "center", alignItems: "center", borderRadius: 7 }}
+                                textStyle={{ color: Colors.BLACK, fontFamily: Font.Bold, fontSize: 18, }}
+                            />
+                    }
                 </View >
             </ScrollView >
         </View >
