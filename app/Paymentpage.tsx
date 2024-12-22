@@ -13,6 +13,7 @@ import { useLocalSearchParams } from 'expo-router';
 import Button from './Components/Button';
 import { PlaceOrder } from '@/Redux/Slice/orderSlicer';
 import { OrderData } from '@/Redux/Slice/orderSlicer';
+import { RemoveFromCart } from '@/Redux/Slice/cartSlicer';
 
 const Paymentpage = () => {
     const theme = useColorScheme();
@@ -44,7 +45,11 @@ const Paymentpage = () => {
         }
 
         const result = await dispatch(PlaceOrder(data))
-        if (result && result.meta.arg.userId) router.push("/OrderPlaced")
+        if (result && result.meta.arg.userId) {
+
+            await dispatch(RemoveFromCart(parsedItem._id))
+            router.push("/OrderPlaced")
+        }
 
     }
     const getDateAfterDays = (days: number | null | undefined) => {
