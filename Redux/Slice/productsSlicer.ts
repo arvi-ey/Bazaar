@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSelector, createSlice, isRejectedWithValue } from "@reduxjs/toolkit";
 import { URL } from "../../config"
 import axios from 'axios';
+import { PlaceOrder } from "./orderSlicer";
 
 export interface GetProduct {
     _id?: string;
@@ -95,7 +96,9 @@ export const productSlice = createSlice({
         currentPage: 0,
         hasMore: true,
     },
-    reducers: {},
+    reducers: {
+
+    },
     extraReducers: (builder) => {
         builder
             .addCase(GetAllProducts.pending, (state) => {
@@ -162,6 +165,15 @@ export const productSlice = createSlice({
             .addCase(DeleteProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as any;
+            })
+            .addCase(PlaceOrder.fulfilled, (state, action) => {
+                const { productId, quantity } = action.payload
+                const data = state.products.filter(data => data._id === productId)
+                state.products = state.products.map((data) =>
+                    data._id == productId
+                        ? { ...data, stock: data.stock ? (data.stock - quantity) : 0 }
+                        : data
+                );
             })
     }
 })

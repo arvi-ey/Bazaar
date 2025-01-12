@@ -216,6 +216,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
             </View>
             <View style={{ width, marginTop: 10, paddingLeft: 15 }} >
                 <Text style={{ color: Text_color, fontFamily: Font.Bold, fontSize: 18 }} >{product?.title}</Text>
+                <Text style={{ color: Text_color, fontFamily: Font.Bold, fontSize: 18 }} >{product?.stock}</Text>
                 <View style={{ width: 250, gap: 10, alignItems: "center", flexDirection: "row" }}>
                     <Text style={{ color: Text_color, fontFamily: Font.Bold, fontSize: 18 }} >₹{product?.price ? (product.price * (1 - 0.40)).toFixed() : 'N/A'}</Text>
                     <View style={{ marginTop: 5, position: "relative", }}>

@@ -21,7 +21,8 @@ export const PlaceOrder = createAsyncThunk(
     'order/placeorder', async (data: OrderData) => {
         try {
             const response = await axios.post(URL + `order/placeorder`, data)
-            if (response.data && response.data.success === true) return response.data.data
+            // console.log(response.data)
+            if (response.data && response.data.order === true) return response.data.data
         }
         catch (error: any) {
             return error.response.data
@@ -58,6 +59,7 @@ export const orderSlice = createSlice({
             })
             .addCase(PlaceOrder.fulfilled, (state, action) => {
                 state.loading = false,
+                    // console.log(action.payload)
                     state.orderItems = [...state.orderItems, action.payload]
             })
             .addCase(PlaceOrder.rejected, (state, action) => {

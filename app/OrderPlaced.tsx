@@ -19,15 +19,15 @@ const OrderPlaced = () => {
     const parsedItem = typeof item === 'string' ? JSON.parse(item) : null;
 
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         setTimer(true)
-    //     }, 2500)
-    // }, [])
+    useEffect(() => {
+        setTimeout(() => {
+            setTimer(true)
+        }, 2500)
+    }, [])
 
-    // useEffect(() => {
-    //     if (timer === true) router.push("/(tabs)/Order")
-    // }, [timer])
+    useEffect(() => {
+        if (timer === true) router.push("/(tabs)/Order")
+    }, [timer])
 
     const getDateAfterDays = (days: number | null | undefined) => {
         if (!days) return
