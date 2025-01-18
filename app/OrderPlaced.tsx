@@ -22,7 +22,7 @@ const OrderPlaced = () => {
     useEffect(() => {
         setTimeout(() => {
             setTimer(true)
-        }, 2500)
+        }, 1500)
     }, [])
 
     useEffect(() => {

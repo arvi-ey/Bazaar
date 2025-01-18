@@ -15,16 +15,16 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
     const theme = useColorScheme();
     const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => {
-                const nextIndex = prevIndex === data.length - 1 ? 0 : prevIndex + 1;
-                flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
-                return nextIndex;
-            });
-        }, 2000);
-        return () => clearInterval(interval);
-    }, [data]);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setCurrentIndex((prevIndex) => {
+    //             const nextIndex = prevIndex === data.length - 1 ? 0 : prevIndex + 1;
+    //             flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+    //             return nextIndex;
+    //         });
+    //     }, 2000);
+    //     return () => clearInterval(interval);
+    // }, [data]);
     const renderItem: FlatListProps<Banner>['renderItem'] = ({ item }) => (
         <View style={{ width, alignItems: 'center', }}>
             <Image source={{ uri: item.image }} style={{ width: width - 20, borderRadius: 12, height: 450 }} resizeMode="cover" />

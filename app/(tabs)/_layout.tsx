@@ -17,6 +17,7 @@ import { GetUserInfo } from '@/Redux/Slice/userSlicer';
 import Button from '../Components/Button';
 import { GetCartItems } from '@/Redux/Slice/cartSlicer';
 import { GetAddress } from '@/Redux/Slice/addressSlicer';
+import { GetUserOrder } from '@/Redux/Slice/orderSlicer';
 export default function TabLayout() {
   const theme = useColorScheme();
   const dispatch = useDispatch<AppDispatch>();
@@ -34,6 +35,7 @@ export default function TabLayout() {
   useEffect(() => {
     if (uid) {
       dispatch(GetUserInfo(uid));
+      dispatch(GetUserOrder(uid.toString()))
       dispatch(GetCartItems(uid))
       dispatch(GetAddress(uid))
     }
