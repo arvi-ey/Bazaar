@@ -75,6 +75,7 @@ export default function RootLayout() {
           <Stack.Screen name="Alladdress" options={{ headerShown: false, }} />
           <Stack.Screen name="Account" />
           <Stack.Screen name="OrderPlaced" options={{ headerShown: false, }} />
+          <Stack.Screen name="productpage/[id]" options={{ headerShown: false, }} />
           <Stack.Screen name="+not-found" />
         </Stack>
       </Provider>

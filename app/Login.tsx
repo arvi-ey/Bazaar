@@ -43,14 +43,21 @@ const Login = () => {
     const apple = require("../assets/images/apple.png")
     const google = require("../assets/images/google.png")
     const facebook = require("../assets/images/facebook.png")
+    const { id } = useLocalSearchParams()
 
     const { from } = useLocalSearchParams();
     const HandleSignUp = async () => {
         setErrorMessage(null)
         const result = await dispatch(AppSignIn(data))
+        // console.log(result.payload)
         if (result?.payload?.user === false) {
             setErrorMessage(result.payload.message)
             return
+        }
+        if (result?.payload?.email === false) {
+            router.push({
+                pathname: "/Signup"
+            })
         }
         if (result.payload._id) {
             await dispatch(GetUserInfo(result.payload._id));
@@ -59,10 +66,11 @@ const Login = () => {
                     pathname: '/(tabs)',
                 })
             }
-            else {
+            if (id) {
                 router.push({
-                    pathname: '/Allproducts',
+                    pathname: `/productpage/${id}`,
                 })
+
             }
         }
     }

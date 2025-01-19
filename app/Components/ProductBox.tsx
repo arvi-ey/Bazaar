@@ -10,13 +10,14 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '@/Redux/Store';
 import { GetAllProducts, GetProducts } from '@/Redux/Slice/productsSlicer';
-import { Router, router } from 'expo-router';
+import { Router, Link, useRouter } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useNavigation } from 'expo-router';
 
 const ProductBox = () => {
     const { products, hasMore, currentPage, loading } = useSelector((state: RootState) => state.product)
     const theme = useColorScheme();
+    const router = useRouter()
     const { uid } = useSelector((state: RootState) => state.auth)
     const dispatch = useDispatch<AppDispatch>();
     const { user } = useSelector((state: RootState) => state.user)
@@ -37,11 +38,24 @@ const ProductBox = () => {
         setPage(page + 1)
     }
     const GoToProductdetails = (id: string, category: string) => {
-        router.push({
-            pathname: '/Product',
-            params: { id, category },
-        })
-    }
+        // router.push({
+        //     pathname: "/productpage", // Match the folder structure
+        //     params: { id },               // Pass the dynamic segment
+        //     query: { category },          // Add additional query parameters
+        // });
+
+        router.push(`productpage/${id}`)
+    };
+
+
+
+
+    // const GoToProductdetails = (id: string, category: string) => {
+    //     router.push({
+    //         pathname: '/Product',
+    //         params: { id, category },
+    //     })
+    // }
 
 
 

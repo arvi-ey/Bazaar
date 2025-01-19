@@ -180,7 +180,8 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
         }
         else {
             router.push({
-                pathname: '/Login'
+                pathname: '/Login',
+                params: { id }
             })
         }
     }
@@ -267,7 +268,10 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                             return (
                                 <TouchableOpacity
                                     activeOpacity={1}
-                                    onPress={() => HandleSizeSelect(item)}
+                                    onPress={() => {
+                                        HandleSizeSelect(item)
+                                        setErrortext("")
+                                    }}
                                     key={index} style={{ width: 50, height: 50, borderRadius: 10, borderWidth: 2, borderColor: (theme === "dark" && SelectSize?.symbol !== item.symbol) ? Colors.WHITE : (theme === "light" && SelectSize?.symbol !== item.symbol) ? Colors.BLACK : Colors.MAIN_COLOR, justifyContent: 'center', alignItems: 'center', marginHorizontal: 7 }} >
 
                                     <Text style={{ color: (theme === "dark" && SelectSize?.symbol !== item.symbol) ? Colors.WHITE : (theme === "light" && SelectSize?.symbol !== item.symbol) ? Colors.BLACK : Colors.MAIN_COLOR, fontFamily: Font.Bold, fontSize: 14 }} >{item.symbol}</Text>

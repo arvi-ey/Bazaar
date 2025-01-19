@@ -7,10 +7,9 @@ import LottieView from 'lottie-react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/Redux/Store';
 import { GetUserOrder } from '@/Redux/Slice/orderSlicer';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native';
-
 const { width, height } = Dimensions.get('window')
 const Order = () => {
     const theme = useColorScheme();
@@ -60,7 +59,7 @@ const Order = () => {
                     <ScrollView>
                         {orderItems && Array.isArray(orderItems) && orderItems.map((data, index) => {
                             return (
-                                <View key={index} style={{ width: width, marginVertical: 20, alignItems: "center", flexDirection: "row", gap: 10, marginLeft: 20 }}>
+                                <TouchableOpacity activeOpacity={0.5} onPress={() => router.push(`productpage/${data.productId}`)} key={index} style={{ width: width, marginVertical: 20, alignItems: "center", flexDirection: "row", gap: 10, marginLeft: 20 }}>
                                     <Image source={{ uri: data.image }} style={{ height: 120, width: 120, borderRadius: 20 }} />
                                     <View style={{ gap: 5 }}>
                                         <View style={{ flexDirection: "row", gap: 10 }}>
@@ -71,7 +70,7 @@ const Order = () => {
                                         <Text style={{ color: FontColor, opacity: 0.5, fontFamily: Font.Regular }}>Delivery by : {getDateAfterDays(data.deliveryTime)} </Text>
                                         <Text style={{ color: FontColor, opacity: 0.5, fontFamily: Font.Regular }}>Order: {data.orderStatus.toLowerCase()} </Text>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             );
                         })}
                     </ScrollView>
