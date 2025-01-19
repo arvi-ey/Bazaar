@@ -17,6 +17,7 @@ import Button from './Button';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AddToCart, cartData } from '@/Redux/Slice/cartSlicer';
+import { Snackbar } from 'react-native-paper';
 
 interface ProductIDProps {
     id: string;
@@ -29,6 +30,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const theme = useColorScheme();
     const dispatch = useDispatch<AppDispatch>()
     const flatListRef = useRef<FlatList>(null);
+    const BackGround = theme === "dark" ? "#393C41" : "#F3F3F6"
     const Text_color = theme === "dark" ? Colors.WHITE : Colors.BLACK
     const [currentindex, setCurrentIndex] = useState<number>(0)
     const [SelectSize, stSelectSize] = useState<Size>()
@@ -37,22 +39,34 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const delivery = require("../../assets/images/deliverytruck.png")
     const returnimage = require("../../assets/images/return.png")
     const cash = require("../../assets/images/cashdelivery.png")
+    const [visible, setVisible] = useState(false);
+
+    const showSnackbar = () => setVisible(true);
+    const hideSnackbar = () => setVisible(false);
+
 
     useEffect(() => {
         dispatch(GetSingleProduct(id))
     }, [dispatch, id])
 
-    useEffect(() => {
-        if (cartitems && cartitems.length > 0 && product) {
-            const data = cartitems.find(cartitems => cartitems.product_id === product._id)
-            if (data) {
-                setProductAdded(true)
-            } else {
-                setProductAdded(false)
-            }
-        }
-    }, [cartitems, product])
+    // useEffect(() => {
+    //     if (cartitems && cartitems.length > 0 && product) {
+    //         const data = cartitems.find(cartitems => cartitems.product_id === product._id)
+    //         if (data) {
+    //             setProductAdded(true)
+    //         } else {
+    //             setProductAdded(false)
+    //         }
+    //     }
+    // }, [cartitems, product])
 
+    useEffect(() => {
+        if (visible === true) {
+            setTimeout(() => {
+                hideSnackbar()
+            }, 2000)
+        }
+    }, [visible])
 
 
 
@@ -146,16 +160,17 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     );
 
     const AddToCat = async () => {
+        // showSnackbar()
         if (!SelectSize && !productadded) {
             setErrortext("Please select size")
             return
         }
-        if (productadded) {
-            router.push({
-                pathname: "/(tabs)/Cart"
-            })
-            return
-        }
+        // if (productadded) {
+        //     router.push({
+        //         pathname: "/(tabs)/Cart"
+        //     })
+        //     return
+        // }
         if (uid) {
             const cartdata: cartData = {
                 userId: uid,
@@ -176,6 +191,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
             const result = await dispatch(AddToCart(cartdata))
             if (result.payload._id) {
                 setProductAdded(true)
+                showSnackbar()
             }
         }
         else {
@@ -285,13 +301,44 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
                     null
                 }
                 <Button
-                    title={productadded ? "View cart" : "Add to cart"}
+                    title={"Add to cart"}
                     activeOpacity={0.5}
                     press={AddToCat}
                     textStyle={styles.ButtonText}
                     buttonStyle={[styles.ButtonStyle, { backgroundColor: Colors.MAIN_COLOR }]}
                 />
             </View>
+            <Snackbar
+                visible={visible}
+                onDismiss={hideSnackbar}
+                style={{ width, justifyContent: "center", alignItems: 'center', marginBottom: 50 }}
+            // action={{
+            //     label: 'Undo',
+            //     onPress: () => {
+            //         // Perform an action
+            //         console.log('Undo action performed');
+            //     },
+            // }}
+            >
+                <View style={{
+                    width: 300,
+                    height: 60,
+                    justifyContent: "center", alignItems: 'center',
+                    backgroundColor: BackGround,
+                    borderRadius: 10,
+                    flexDirection: "row",
+                    gap: 20
+                }}>
+                    <Text style={{ fontFamily: Font.Regular, color: Text_color, fontSize: 15 }}>Item added to Cart</Text>
+                    <Button
+                        title={productadded ? "View cart" : " "}
+                        activeOpacity={0.5}
+                        press={() => router.push({ pathname: "/(tabs)/Cart" })}
+                        textStyle={{ fontFamily: Font.Medium }}
+                        buttonStyle={[{ backgroundColor: Colors.MAIN_COLOR, width: 100, height: 40, justifyContent: "center", alignItems: "center", borderRadius: 10 }]}
+                    />
+                </View>
+            </Snackbar>
         </View >
     )
 }

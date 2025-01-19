@@ -4,12 +4,13 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { store } from '@/Redux/Store';
 import { Font } from '@/Font';
 import { Colors } from '@/Theme';
 import { StatusBar } from 'react-native';
+import { PaperProvider } from 'react-native-paper';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -28,7 +29,6 @@ export default function RootLayout() {
     OutfitRegular: require('../assets/fonts/Outfit-Regular.ttf'),
     OutfitMedium: require('../assets/fonts/Outfit-Medium.ttf'),
     PermanentMarkerRegular: require('../assets/fonts/PermanentMarker-Regular.ttf'),
-
   });
 
   useEffect(() => {
@@ -53,32 +53,31 @@ export default function RootLayout() {
     headerTintColor: colorScheme === 'dark' ? Colors.WHITE : Colors.BLACK,
   };
 
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <StatusBar
-        barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
-        backgroundColor={colorScheme === 'dark' ? Colors.BLACK : Colors.WHITE}
-      />
-      <Provider store={store}>
-        <Stack
-          screenOptions={globalHeaderStyles}
-        >
-          <Stack.Screen name="Onboarding" options={{ headerShown: false, }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false, }} />
-          <Stack.Screen name="Allproducts" options={{ headerShown: false, }} />
-          <Stack.Screen name="Product" options={{ headerShown: false, }} />
-          <Stack.Screen name="Login" options={{ headerShown: false, }} />
-          <Stack.Screen name="Signup" options={{ headerShown: false, }} />
-          <Stack.Screen name="Paymentpage" options={{ headerShown: false, }} />
-          <Stack.Screen name="Address" options={{ headerShown: false, }} />
-          <Stack.Screen name="Alladdress" options={{ headerShown: false, }} />
-          <Stack.Screen name="Account" />
-          <Stack.Screen name="OrderPlaced" options={{ headerShown: false, }} />
-          <Stack.Screen name="productpage/[id]" options={{ headerShown: false, }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </Provider>
-    </ThemeProvider>
+    <PaperProvider theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> {/* Wrap with PaperProvider */}
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <StatusBar
+          barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
+          backgroundColor={colorScheme === 'dark' ? Colors.BLACK : Colors.WHITE}
+        />
+        <Provider store={store}>
+          <Stack screenOptions={globalHeaderStyles}>
+            <Stack.Screen name="Onboarding" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="Allproducts" options={{ headerShown: false }} />
+            <Stack.Screen name="Product" options={{ headerShown: false }} />
+            <Stack.Screen name="Login" options={{ headerShown: false }} />
+            <Stack.Screen name="Signup" options={{ headerShown: false }} />
+            <Stack.Screen name="Paymentpage" options={{ headerShown: false }} />
+            <Stack.Screen name="Address" options={{ headerShown: false }} />
+            <Stack.Screen name="Alladdress" options={{ headerShown: false }} />
+            <Stack.Screen name="Account" />
+            <Stack.Screen name="OrderPlaced" options={{ headerShown: false }} />
+            <Stack.Screen name="productpage/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </Provider>
+      </ThemeProvider>
+    </PaperProvider>
   );
 }
