@@ -5,6 +5,7 @@ import { RemoveFromCart } from "./cartSlicer";
 
 export interface OrderData {
     productId: string;
+    _id: string;
     userId: string;
     totalPrice: number;
     quantity: number;
@@ -13,8 +14,10 @@ export interface OrderData {
     image: string;
     productTitle: string;
     paymentMode: string;
+    orderDate: number;
+    orderAddress?: string;
     paymentStatus: 'PAID' | 'PENDING' | 'REFUNDED';
-    orderStatus: 'PLACED' | 'SHIPPED' | 'OUT' | 'DELIVERED' | 'CANCELLED' | 'RETURNED';
+    orderStatus: 'PLACED' | 'SHIPPED' | 'OUT FOR DELIVERY' | 'DELIVERED' | 'CANCELLED' | 'RETURNED';
 }
 
 export const PlaceOrder = createAsyncThunk(
@@ -43,12 +46,25 @@ export const GetUserOrder = createAsyncThunk(
     }
 )
 
+export const GetOrderById = createAsyncThunk(
+    'order/getsingleorder', async (id: string) => {
+        try {
+            const response = await axios.get(URL + `order/getsingleorder/${id}`)
+            if (response.data && response.data.success === true) return response.data.data
+        }
+        catch (error: any) {
+            return error.response.data
+        }
+    }
+)
+
 export const orderSlice = createSlice({
     name: "order",
     initialState: {
         orderItems: [] as OrderData[],
         loading: false,
-        error: null
+        error: null,
+        singleOrder: null
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -77,6 +93,13 @@ export const orderSlice = createSlice({
             .addCase(GetUserOrder.rejected, (state, action) => {
                 state.loading = false,
                     state.error = action.payload as any
+            })
+            .addCase(GetOrderById.pending, (state, action) => {
+                state.loading = true;
+                state.error = null
+            })
+            .addCase(GetOrderById.fulfilled, (state, action) => {
+                state.singleOrder = action.payload
             })
     }
 })

@@ -115,7 +115,7 @@ const CartBox: FC<CartBoxProps> = ({ item }) => {
                         params: { item: JSON.stringify(item) }
                     })}
                     style={{ flexDirection: "row", marginTop: 5, backgroundColor: Colors.MAIN_COLOR, width: 150, justifyContent: "center", alignItems: 'center', height: 50, borderRadius: 7 }}>
-                    <Text style={{ color: Colors.BLACK, fontFamily: Font.Bold }}>Place Order</Text>
+                    <Text style={{ color: Colors.BLACK, fontFamily: Font.Bold }}>Proceed order</Text>
                 </TouchableOpacity>
             </View>
         </View >

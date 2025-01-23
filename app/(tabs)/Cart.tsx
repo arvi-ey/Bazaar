@@ -79,7 +79,7 @@ const Cart = () => {
                     <Text style={{ color: FontColor, fontFamily: Font.Medium, fontSize: 15, opacity: 0.5 }}>{totalItem} items</Text>
                 </View>
                 <Button
-                    title='Make payment'
+                    title='Proceed  all'
                     buttonStyle={{ backgroundColor: Colors.MAIN_COLOR, width: 200, height: 50, justifyContent: 'center', alignItems: 'center', borderRadius: 7 }}
                     textStyle={{ color: Colors.BLACK, fontFamily: Font.Bold }}
                 />

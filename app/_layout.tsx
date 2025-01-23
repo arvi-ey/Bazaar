@@ -54,7 +54,7 @@ export default function RootLayout() {
   };
 
   return (
-    <PaperProvider theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> {/* Wrap with PaperProvider */}
+    <PaperProvider theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <StatusBar
           barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
@@ -74,6 +74,7 @@ export default function RootLayout() {
             <Stack.Screen name="Account" />
             <Stack.Screen name="OrderPlaced" options={{ headerShown: false }} />
             <Stack.Screen name="productpage/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="orderdetail/[id]" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
           </Stack>
         </Provider>

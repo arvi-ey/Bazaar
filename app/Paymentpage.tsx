@@ -42,6 +42,8 @@ const Paymentpage = () => {
             size: parsedItem.size,
             totalPrice: parsedItem.subTotal,
             userId: parsedItem.userId,
+            orderDate: Date.now(),
+            orderAddress: `${address[0].label} ${address[0].street} ${address[0].landmark} ${address[0].state} ${address[0].pinCode}`
         }
 
         const result = await dispatch(PlaceOrder(data))
@@ -236,7 +238,7 @@ const Paymentpage = () => {
                                 <ActivityIndicator color={Colors.MAIN_COLOR} size="large" />
                             </View> :
                             <Button
-                                title='Make Payment'
+                                title='Place Order'
                                 activeOpacity={0.5}
                                 press={ProcedePayment}
                                 buttonStyle={{ backgroundColor: Colors.MAIN_COLOR, height: 60, width: width - 50, marginTop: 20, justifyContent: "center", alignItems: "center", borderRadius: 7 }}
