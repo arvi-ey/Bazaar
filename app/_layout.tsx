@@ -75,6 +75,7 @@ export default function RootLayout() {
             <Stack.Screen name="OrderPlaced" options={{ headerShown: false }} />
             <Stack.Screen name="productpage/[id]" options={{ headerShown: false }} />
             <Stack.Screen name="orderdetail/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="CategoryProduct" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
           </Stack>
         </Provider>

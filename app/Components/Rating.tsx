@@ -7,7 +7,7 @@ interface StarProps {
     maxRatingCount?: number; // Maximum number of stars
     size?: number; // Size of the stars
     selectedRatingColor?: string; // Color of selected stars
-    unSelectedRatingColor?: string; // Color of unselected stars
+    unSelectedRatingColor?: string;// Color of unselected stars
 }
 
 interface RatingState {

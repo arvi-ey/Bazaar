@@ -87,6 +87,21 @@ export const DeleteProduct = createAsyncThunk(
         }
     })
 
+
+export const GetProductsByCategory = createAsyncThunk(
+    'products/getproductsbycategory', async (category: string) => {
+        try {
+            const response = await axios.get(URL + `products/getproductcategory/${category}`)
+            if (response.data.success === true) {
+                return response.data.data
+            }
+        }
+        catch (error: any) {
+            return error.response.data
+        }
+    }
+)
+
 export const productSlice = createSlice({
     name: 'products',
     initialState: {
@@ -174,6 +189,19 @@ export const productSlice = createSlice({
                         ? { ...data, stock: data.stock ? (data.stock - quantity) : 0 }
                         : data
                 );
+            })
+            .addCase(GetProductsByCategory.pending, (state, action) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(GetProductsByCategory.fulfilled, (state, action) => {
+                state.loading = false,
+                    state.products = action.payload
+            })
+            .addCase(GetProductsByCategory.rejected, (state, action) => {
+                state.loading = false,
+                    // state.products = action.payload
+                    state.error = action.payload as any
             })
     }
 })

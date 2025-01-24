@@ -12,7 +12,7 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Rating from './Rating';
-import { Router, router } from 'expo-router';
+import { Router, router, useLocalSearchParams } from 'expo-router';
 import Button from './Button';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -40,6 +40,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const returnimage = require("../../assets/images/return.png")
     const cash = require("../../assets/images/cashdelivery.png")
     const [visible, setVisible] = useState(false);
+    const params = useLocalSearchParams()
 
     const showSnackbar = () => setVisible(true);
     const hideSnackbar = () => setVisible(false);
@@ -49,16 +50,6 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
         dispatch(GetSingleProduct(id))
     }, [dispatch, id])
 
-    // useEffect(() => {
-    //     if (cartitems && cartitems.length > 0 && product) {
-    //         const data = cartitems.find(cartitems => cartitems.product_id === product._id)
-    //         if (data) {
-    //             setProductAdded(true)
-    //         } else {
-    //             setProductAdded(false)
-    //         }
-    //     }
-    // }, [cartitems, product])
 
     useEffect(() => {
         if (visible === true) {
@@ -68,6 +59,10 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
         }
     }, [visible])
 
+    const GoBack = () => {
+        if (params.from == "category") router.push(`/CategoryProduct`)
+        else router.push("/Allproducts")
+    }
 
 
     const ProductList = (item: string) => {
@@ -80,7 +75,7 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
             <View style={{ width, height: 500, position: 'relative' }} >
                 <Image source={{ uri: item }} style={{ width: "100%", height: "100%", borderBottomLeftRadius: 40, borderBottomRightRadius: 40, objectFit: "cover" }} />
                 {currentindex === 0 ?
-                    <TouchableOpacity onPress={() => router.push({ pathname: "/Allproducts" })} style={{ position: 'absolute', left: 20, top: 20, backgroundColor: Colors.MAIN_COLOR, padding: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }} >
+                    <TouchableOpacity onPress={GoBack} style={{ position: 'absolute', left: 20, top: 20, backgroundColor: Colors.MAIN_COLOR, padding: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }} >
                         <AntDesign name="back" size={24} color={Colors.BLACK} />
                     </TouchableOpacity>
                     :

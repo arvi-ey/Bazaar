@@ -7,13 +7,15 @@ import { useState, useEffect } from 'react';
 import { RootState } from '@/Redux/Store';
 import { useSelector } from 'react-redux';
 import Button from './Components/Button';
-import { router, Router } from 'expo-router';
+import { router, Router, useLocalSearchParams } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import ProductBox from './Components/ProductBox';
+import { useSearchParams } from 'expo-router/build/hooks';
 
 
 const Allproducts = () => {
     const theme = useColorScheme();
+    const params = useLocalSearchParams()
 
 
     return (

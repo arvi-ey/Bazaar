@@ -38,12 +38,6 @@ const ProductBox = () => {
         setPage(page + 1)
     }
     const GoToProductdetails = (id: string, category: string) => {
-        // router.push({
-        //     pathname: "/productpage", // Match the folder structure
-        //     params: { id },               // Pass the dynamic segment
-        //     query: { category },          // Add additional query parameters
-        // });
-
         router.push(`productpage/${id}`)
     };
 
