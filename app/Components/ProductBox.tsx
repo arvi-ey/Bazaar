@@ -116,7 +116,7 @@ const ProductBox = () => {
     }
     const renderFooter = () => {
         return (
-            <View style={{ marginBottom: 50 }}>
+            <View style={{ marginBottom: 150 }}>
                 {loading ?
                     <ActivityIndicator size="large" color={Colors.MAIN_COLOR} />
                     :

@@ -59,19 +59,21 @@ const Order = () => {
                     <ScrollView>
                         {orderItems && Array.isArray(orderItems) && orderItems.map((data, index) => {
                             return (
-                                <TouchableOpacity activeOpacity={0.5} onPress={() => router.push(`/orderdetail/${data._id}`)}
+                                <TouchableOpacity activeOpacity={0.5} onPress={() => {
+                                    router.push(`/orderdetail/${data._id}`)
+                                }}
 
-                                    key={index} style={{ width: width, marginVertical: 20, alignItems: "center", flexDirection: "row", gap: 10, marginLeft: 20 }}>
-                                    <Image source={{ uri: data.image }} style={{ height: 120, width: 120, borderRadius: 20 }} />
+                                    key={index} style={{ width: width, marginVertical: 20, alignItems: "center", flexDirection: "row", gap: 10, marginLeft: 20, opacity: data.orderStatus === "DELIVERED" ? 0.5 : 1 }}>
+                                    <Image source={{ uri: data.image }} style={{ height: 150, width: 120, borderRadius: 20 }} />
                                     <View style={{ gap: 5 }}>
                                         <Text style={{ color: FontColor, fontFamily: Font.Medium, fontSize: 16 }}>{data.productTitle && data.productTitle.length > 32 ? data.productTitle.slice(0, 32) : data.productTitle}</Text>
                                         <View style={{ flexDirection: "row", gap: 10 }}>
                                             <Text style={{ color: FontColor, opacity: 0.5, fontFamily: Font.Regular }}>Size: {data.size}</Text>
-                                            <Text style={{ color: FontColor, opacity: 0.5, fontFamily: Font.Regular }}>Qty: {data.quantity}</Text>
+                                            <Text style={{ color: FontColor, opacity: 0.5, fontFamily: Font.Regular }}>Quantity: {data.quantity}</Text>
                                         </View>
-                                        <Text style={{ color: FontColor, fontFamily: Font.Medium, fontSize: 18 }}>₹{data.totalPrice}</Text>
-                                        <Text style={{ color: FontColor, opacity: 0.5, fontFamily: Font.Regular }}>Delivery by : {getDateAfterDays(data.deliveryTime)} </Text>
-                                        <Text style={{ color: FontColor, opacity: 0.5, fontFamily: Font.Regular }}>Status: {data.orderStatus.toLowerCase()} </Text>
+                                        <Text style={{ color: FontColor, fontFamily: Font.Medium, fontSize: 18 }}>₹ {data.totalPrice}</Text>
+                                        <Text style={{ color: FontColor, opacity: 0.9, fontFamily: Font.Regular }}>Delivery by : {getDateAfterDays(data.deliveryTime)} </Text>
+                                        <Text style={{ color: FontColor, opacity: 0.5, fontFamily: Font.Light, fontSize: 12 }}>Press to view order details...</Text>
                                     </View>
                                 </TouchableOpacity>
                             );

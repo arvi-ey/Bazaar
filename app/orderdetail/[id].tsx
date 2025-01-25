@@ -1,4 +1,4 @@
-import { Image, Keyboard, StyleSheet, FlatList, Platform, RefreshControl, SafeAreaView, Text, TextInput, Dimensions, View, ScrollView, NativeSyntheticEvent, NativeScrollEvent, StatusBar, TouchableOpacity } from 'react-native';
+import { Image, Keyboard, StyleSheet, FlatList, Platform, RefreshControl, SafeAreaView, Text, TextInput, Dimensions, View, ScrollView, NativeSyntheticEvent, NativeScrollEvent, StatusBar, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/Theme';
 import { Font } from '@/Font';
@@ -19,7 +19,7 @@ import LottieView from 'lottie-react-native';
 const Order = () => {
     const theme = useColorScheme();
     const dispatch = useDispatch<AppDispatch>()
-    const { singleOrder } = useSelector((state: RootState) => state.order)
+    const { singleOrder, loading } = useSelector((state: RootState) => state.order)
     const { id } = useLocalSearchParams()
     const Background = theme === "dark" ? Colors.BLACK : Colors.WHITE
     const FontColor = theme === "dark" ? Colors.WHITE : Colors.BLACK
@@ -71,6 +71,13 @@ const Order = () => {
             setRefresh(false);
         }, 1000);
     }, []);
+    if (loading) {
+        return (
+            <View style={{ width, height, alignItems: 'center', justifyContent: 'center', backgroundColor: Background, }} >
+                <ActivityIndicator size={"large"} color={MainColor} />
+            </View>
+        )
+    }
 
     return (
         <View style={{ width, height, alignItems: 'center', backgroundColor: Background, }} >
@@ -113,8 +120,9 @@ const Order = () => {
                                         : null
                                     }
                                 </View>
-                                <View style={{ position: "absolute", left: 10, width: 85, }}>
-                                    <Text style={{ fontFamily: Font.Regular, color: FontColor, fontSize: 12, marginLeft: 5, marginTop: -5, opacity: 1 }}>Order Placed</Text>
+                                <View style={{ position: "absolute", left: 10, width: 90, }}>
+                                    <Text style={{ fontFamily: Font.Regular, color: FontColor, fontSize: 14, marginLeft: 5, marginTop: -5, opacity: 1 }}>Order Placed</Text>
+                                    <Text style={{ fontFamily: Font.Regular, color: FontColor, fontSize: 10, marginLeft: 5, marginTop: 2, opacity: 0.5 }}>{formatDate(singleOrder.orderDate)}</Text>
                                 </View>
                             </View>
 
@@ -135,7 +143,7 @@ const Order = () => {
                                         : null
                                     }
                                 </View>
-                                <View style={{ position: "absolute", left: 10, width: 85, }}>
+                                <View style={{ position: "absolute", left: 10, width: 90, }}>
                                     <Text style={{ fontFamily: Font.Regular, color: FontColor, fontSize: 12, marginLeft: 5, opacity: (singleOrder.orderStatus === "SHIPPED" || singleOrder.orderStatus === "OUT" || singleOrder.orderStatus === "DELIVERED") ? 1 : 0.5 }}>Order Shippted</Text>
                                 </View>
                             </View>
@@ -157,7 +165,7 @@ const Order = () => {
                                         : null
                                     }
                                 </View>
-                                <View style={{ position: "absolute", left: 10, width: 85, }}>
+                                <View style={{ position: "absolute", left: 10, width: 90, }}>
                                     <Text style={{ fontFamily: Font.Regular, color: FontColor, fontSize: 12, marginLeft: 5, opacity: (singleOrder.orderStatus === "OUT" || singleOrder.orderStatus === "DELIVERED") ? 1 : 0.5 }}>Out for delivery</Text>
                                 </View>
                             </View>
@@ -179,13 +187,14 @@ const Order = () => {
                                         : null
                                     }
                                 </View>
-                                <View style={{ position: "absolute", left: 10, width: 85, }}>
-                                    <Text style={{ fontFamily: Font.Regular, color: FontColor, fontSize: 12, marginLeft: 5, opacity: (singleOrder.orderStatus === "DELIVERED") ? 1 : 0.5 }}>Item delivered</Text>
+                                <View style={{ position: "absolute", left: 10, width: 95, }}>
+                                    <Text style={{ fontFamily: Font.Regular, color: FontColor, fontSize: 14, marginLeft: 5, opacity: (singleOrder.orderStatus === "DELIVERED") ? 1 : 0.5 }}>Item delivered</Text>
+                                    <Text style={{ fontFamily: Font.Regular, color: FontColor, fontSize: 10, marginLeft: 5, opacity: 0.5 }}>{singleOrder.orderStatus === "DELIVERED" ? `Delivered on ${getDateAfterDays(singleOrder.deliveryTime)}` : `Delivery by ${getDateAfterDays(singleOrder.deliveryTime)}`}</Text>
                                 </View>
                             </View>
 
                         </View>
-                        <View style={{ height: 90, borderRadius: 10, width: 5, backgroundColor: statuSColor, alignItems: "center", marginTop: -8 }}>
+                        {/* <View style={{ height: 90, borderRadius: 10, width: 5, backgroundColor: statuSColor, alignItems: "center", marginTop: -8 }}>
                             <View style={{ position: "relative", flexDirection: "row", backgroundColor: "", marginBottom: 10 }}>
                                 <View style={{ height: 10, width: 10, borderRadius: 25, backgroundColor: MainColor }} />
                                 <View style={{ position: "absolute", left: 10, width: 85, }}>
@@ -193,7 +202,7 @@ const Order = () => {
                                 </View>
                             </View>
 
-                        </View>
+                        </View> */}
                         <View style={{ height: 90, borderRadius: 10, width: 5, alignItems: "center", marginTop: -8 }}>
                             <View style={{ position: "relative", flexDirection: "row", backgroundColor: "", }}>
                                 <View style={{ height: 10, width: 10, borderRadius: 25, backgroundColor: MainColor }} />

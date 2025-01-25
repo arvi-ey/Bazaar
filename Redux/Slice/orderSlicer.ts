@@ -100,6 +100,7 @@ export const orderSlice = createSlice({
             })
             .addCase(GetOrderById.fulfilled, (state, action) => {
                 state.singleOrder = action.payload
+                state.loading = false
             })
     }
 })

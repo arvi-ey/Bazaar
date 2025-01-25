@@ -23,7 +23,7 @@ interface ProductIDProps {
     id: string;
 }
 const ProductDetails: FC<ProductIDProps> = ({ id }) => {
-    const { product } = useSelector((state: RootState) => state.singleproduct)
+    const { product, loading } = useSelector((state: RootState) => state.singleproduct)
     const { uid } = useSelector((state: RootState) => state.auth)
     const { cartitems } = useSelector((state: RootState) => state.cart)
     const [productadded, setProductAdded] = useState<boolean>(false)
@@ -45,7 +45,6 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     const showSnackbar = () => setVisible(true);
     const hideSnackbar = () => setVisible(false);
 
-
     useEffect(() => {
         dispatch(GetSingleProduct(id))
     }, [dispatch, id])
@@ -60,13 +59,19 @@ const ProductDetails: FC<ProductIDProps> = ({ id }) => {
     }, [visible])
 
     const GoBack = () => {
-        if (params.from == "category") router.push(`/CategoryProduct`)
+        if (params.from == "category") {
+
+            router.push({
+                pathname: `/CategoryProduct`,
+                params: { category: params.categoryName }
+            })
+        }
         else router.push("/Allproducts")
     }
 
 
     const ProductList = (item: string) => {
-        if (!item) {
+        if (loading) {
             return (
                 <ActivityIndicator color={Colors.MAIN_COLOR} size={'large'} />
             )

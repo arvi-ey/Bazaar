@@ -56,7 +56,7 @@ const CategoryProduct = () => {
     const GoToProductdetails = (id: string, category: string) => {
         router.push({
             pathname: `productpage/${id}`,
-            params: { from: "category" }
+            params: { from: "category", categoryName: params.category }
         })
     };
 

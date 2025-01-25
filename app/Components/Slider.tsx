@@ -15,50 +15,95 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
     const theme = useColorScheme();
     const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         setCurrentIndex((prevIndex) => {
-    //             const nextIndex = prevIndex === data.length - 1 ? 0 : prevIndex + 1;
-    //             flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
-    //             return nextIndex;
-    //         });
-    //     }, 2000);
-    //     return () => clearInterval(interval);
-    // }, [data]);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((prevIndex) => {
+                const nextIndex = prevIndex === data.length - 1 ? 0 : prevIndex + 1;
+                flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+                return nextIndex;
+            });
+        }, 2000);
+        return () => clearInterval(interval);
+    }, [data]);
     const renderItem: FlatListProps<Banner>['renderItem'] = ({ item }) => (
         <View style={{ width, alignItems: 'center', }}>
             <Image source={{ uri: item.image }} style={{ width: width - 20, borderRadius: 12, height: 450 }} resizeMode="cover" />
         </View>
     );
 
+
+    // useEffect(() => {
+    //     const interVal = setInterval(() => {
+
+    //         if (currentIndex < data.length - 1) {
+    //             // setCurrentIndex(currentIndex + 1)
+    //             const nextIndex = currentIndex + 1
+    //             flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+    //         }
+    //         else {
+    //             const nextIndex = 1
+    //             flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+
+    //         }
+    //     }, 2000)
+
+    // }, [data, currentIndex])
+
     const HandleSCroll = (event: any) => {
         const offset = event.nativeEvent.contentOffset.x
+        // console.log(offset)
         const index = parseInt((offset / width).toFixed())
         setCurrentIndex(index)
+        // console.log("Index_____Trigerring", index)
 
     }
+    const getItemLayout = (data, currentIndex) => ({
+        length: width,
+        offset: width * currentIndex,
+        index: currentIndex,
+    });
 
     return (
         <View style={{ marginVertical: 10 }} >
-            <FlatList
-                ref={flatListRef}
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
-                horizontal
-                onScroll={HandleSCroll}
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-            />
-            <View style={{ width: width - 20, flexDirection: "row", justifyContent: "center", gap: 10, marginVertical: 5 }}>
-                {
-                    data?.map((value, index) => {
-                        return (
-                            <View key={value._id} style={{ opacity: index === currentIndex ? 1 : 0.5, height: 3, width: index === currentIndex ? 20 : 15, borderRadius: 30, backgroundColor: "#C3C3C3" }} />
-                        )
-                    })
-                }
-            </View>
+            {data?.length > 0 ? (
+                <>
+                    <FlatList
+                        ref={flatListRef}
+                        data={data}
+                        renderItem={renderItem}
+                        getItemLayout={getItemLayout}
+                        keyExtractor={(item, index) => index.toString()}
+                        horizontal
+                        onScroll={HandleSCroll}
+                        pagingEnabled
+                        showsHorizontalScrollIndicator={false}
+                    />
+                    <View
+                        style={{
+                            width: width - 20,
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            gap: 10,
+                            marginVertical: 5,
+                        }}
+                    >
+                        {data.map((_, index) => (
+                            <View
+                                key={index}
+                                style={{
+                                    opacity: index === currentIndex ? 1 : 0.5,
+                                    height: 3,
+                                    width: index === currentIndex ? 20 : 15,
+                                    borderRadius: 30,
+                                    backgroundColor: '#C3C3C3',
+                                }}
+                            />
+                        ))}
+                    </View>
+                </>
+            ) : (
+                <Text style={{ textAlign: 'center', color: '#999' }}>No data available</Text>
+            )}
         </View>
     );
 };
