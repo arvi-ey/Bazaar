@@ -135,6 +135,9 @@ const ProductBox = () => {
                 </TouchableOpacity>
                 <Text style={{ fontFamily: Font.Medium, color: FontColor, fontSize: 25 }}>All products</Text>
             </View>
+            {
+                !products && <ActivityIndicator color={Colors.MAIN_COLOR} size={"large"} />
+            }
             <FlatList
                 contentContainerStyle={{ width, marginTop: 10, justifyContent: 'center', alignItems: 'center' }}
                 ListHeaderComponent={SearchBox}
