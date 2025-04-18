@@ -9,14 +9,16 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { store } from '@/Redux/Store';
 import { Font } from '@/Font';
 import { Colors } from '@/Theme';
-import { StatusBar } from 'react-native';
+import { StatusBar, View, Dimensions, Image } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
+const { width, height } = Dimensions.get('window')
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const Splash = require("../assets/images/splash.png")
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     OutfitBlack: require('../assets/fonts/Outfit-Black.ttf'),
@@ -38,7 +40,11 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return null;
+    return (
+      <View style={{ height, width }}>
+        <Image source={Splash} />
+      </View>
+    )
   }
 
   const globalHeaderStyles = {
